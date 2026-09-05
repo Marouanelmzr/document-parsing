@@ -1,0 +1,38 @@
+# Core
+numpy
+pandas
+scipy
+pyarrow==21.0.0
+
+# Machine Learning
+scikit-learn
+xgboost
+lightgbm
+optuna
+
+# Deep Learning
+torch
+
+# Configuration
+hydra-core==1.3.2
+omegaconf
+
+# Experiment Tracking
+wandb
+
+# Data Versioning
+dvc
+
+# Visualization
+matplotlib
+
+# Utilities
+tqdm
+
+# Development
+jupyterlab
+ipykernel
+pytest
+
+# Data
+avwx-engine
