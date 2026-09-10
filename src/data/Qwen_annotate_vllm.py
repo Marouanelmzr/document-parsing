@@ -19,76 +19,61 @@ MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
 # so prompt length is constant across the whole run -- only the image varies.
 TARGET_SCHEMA = {
     "fields": {
-        "date": "...", "taxes": {"items": []},
-        "locale": {"country": "...", "currency": "...", "language": "..."},
-        "due_date": "...", "po_number": "...", "total_net": "...", "total_tax": "...",
+        "supplier_name": "<string>",
+        "supplier_phone_number": "<string>",
+        "supplier_address": {
+            "address": "<string>", "street_number": "<string>", "street_name": "<string>",
+            "po_box": "<string>", "address_complement": "<string, e.g. floor/building/suite>",
+            "city": "<string>", "postal_code": "<string>", "state": "<string>", "country": "<string>"
+        },
+        "customer_name": "<string>",
+        "customer_address": {
+            "address": "<string>", "street_number": "<string>", "street_name": "<string>",
+            "po_box": "<string>", "address_complement": "<string, e.g. floor/building/suite>",
+            "city": "<string>", "postal_code": "<string>", "state": "<string>", "country": "<string>"
+        },
+        "invoice_number": "<string>",
+        "document_type": "<classification>",
+        "date": "<date>",
+        "due_date": "<date>",
+        "period": "<date>",
+        "locale": {"language": "<string, ISO 639-1>", "country": "<string, ISO 3166-1 alpha-2>", "currency": "<string, ISO 4217>"},
+        "total_net": "<number, total before taxes>",
+        "total_tax": "<number>",
+        "total_amount": "<number, final total the customer owes>",
+        "taxes": [{"rate": "<number, decimal e.g. 0.20>", "base": "<number, amount tax computed on>", "amount": "<number>"}],
         "line_items": [{
-            "quantity": "...", "tax_rate": "...", "tax_amount": "...", "unit_price": "...",
-            "description": "...", "total_price": "...", "product_code": "...", "unit_measure": "..."
+            "description": "<string>", "quantity": "<number>", "unit_price": "<number>",
+            "total_price": "<number, printed line total>",
+            "tax_amount": "<number>", "tax_rate": "<number, decimal>", "unit_measure": "<string>"
         }],
-        "customer_id": "...", "payment_date": "...", "total_amount": "...",
-        "customer_name": "...", "document_type": "...", "supplier_name": "...",
-        "invoice_number": "...", "supplier_email": "...",
-        "billing_address": {"city": "...", "state": "...", "po_box": "...", "address": "...",
-                             "country": "...", "postal_code": "...", "street_name": "...",
-                             "street_number": "...", "address_complement": "..."},
-        "customer_address": {"city": "...", "state": "...", "po_box": "...", "address": "...",
-                              "country": "...", "postal_code": "...", "street_name": "...",
-                              "street_number": "...", "address_complement": "..."},
-        "shipping_address": {"city": "...", "state": "...", "po_box": "...", "address": "...",
-                              "country": "...", "postal_code": "...", "street_name": "...",
-                              "street_number": "...", "address_complement": "..."},
-        "supplier_address": {"city": "...", "state": "...", "po_box": "...", "address": "...",
-                              "country": "...", "postal_code": "...", "street_name": "...",
-                              "street_number": "...", "address_complement": "..."},
-        "supplier_website": "...", "reference_numbers": ["..."], "supplier_phone_number": "...",
-        "supplier_payment_details": {"items": []},
-        "customer_company_registration": {"items": []},
-        "supplier_company_registration": {"items": []},
     },
 }
 
-PROMPT = f"""You are an information-extraction engine for invoice images.
-Read the attached invoice image carefully and extract every field you can find.
+PROMPT = f"""You are an information-extraction engine for invoice images. Read the attached invoice image and extract every field you can find.
 
-Return ONLY a single valid JSON object with exactly this shape (fill values you find,
-use null for any field you cannot find, use an empty list [] for list fields with no
-items, and do not add extra keys):
+Return ONLY a single valid JSON object matching this shape exactly (placeholders like "<number>"/"<date>" show the expected type; use null when a field isn't found, [] for empty lists, and add no extra keys):
 
-{json.dumps(TARGET_SCHEMA, indent=2)}
+{json.dumps(TARGET_SCHEMA, separators=(',', ':'))}
 
-CRITICAL RULES - read carefully, these prevent common extraction errors:
+CRITICAL RULES:
 
-1. TWO PARTIES ONLY. There are exactly two parties on this document: SUPPLIER (the
-   issuing company, sometimes labeled "From", "Seller", "Bill From") and CUSTOMER
-   (the buyer, sometimes labeled "To", "Buyer", "Bill To", "Ship To"). For every
-   contact field (address, phone, email, website), only use a value that is printed
-   directly under that party's OWN label block. Never copy a phone number, website,
-   email, or address from the customer's block into any supplier_* field, or vice
-   versa. If you are not sure which block a value belongs to, leave the field null
-   rather than guessing.
+1. TWO PARTIES ONLY: SUPPLIER (issuer; may be labeled "From"/"Seller"/"Bill From") vs CUSTOMER (buyer; "To"/"Buyer"/"Bill To"/"Ship To"). For address/phone fields, only use values printed under that party's own block. Never cross-copy between supplier_* and customer_*. If unsure which block a value belongs to, use null.
 
-2. NO INFERRED OR COPIED VALUES. If a field has no explicit printed label on the
-   document, output null for it. In particular: do not copy invoice_number into
-   po_number (or any other field) just because no PO number is printed -- if there
-   is no line/label that says "PO Number" or "P.O.", po_number must be null. Never
-   fill a field by duplicating the value of a different field.
+2. NO INFERRED OR COPIED VALUES: a field with no explicit printed label is null — never fill it by duplicating a different field's value.
 
-3. LINE ITEM COLUMNS ARE POSITIONAL, NOT INTERCHANGEABLE. Each line item row has
-   distinct printed columns (for example: description, quantity, unit price, tax
-   rate, tax amount, total price). Map each value strictly by its column position
-   in the table header -- do not reuse the same printed number for two different
-   fields. In particular, tax_amount and total_price are almost always different
-   values; only set them equal if the table genuinely prints the same number in
-   both columns.
+3. LINE ITEM COLUMNS ARE POSITIONAL: map each value by its column position in the table header (e.g. description, quantity, unit price, tax rate, tax amount, total price) — never reuse one printed number for two fields. tax_amount and total_price are almost always different; only set them equal if the table genuinely prints the same number in both columns.
 
-4. Copy text values exactly as they appear on the invoice (dates, numbers, names,
-   addresses). Split any combined "bill to" / buyer block into customer_name and
-   customer_address parts. Fill line_items as a list, one entry per invoice line,
-   even if some sub-fields are missing. Do not compute or validate totals; just
-   transcribe whatever amounts are printed.
+4. Transcribe values exactly as printed (dates, numbers, names, addresses); do not compute or validate totals. Split a combined "bill to"/buyer block into customer_name and customer_address. Fill line_items with one entry per row, even if some sub-fields are missing.
 
-Output raw JSON only, no markdown fences, no commentary.
+5. THREE DISTINCT DATES — do not confuse them:
+   - date = invoice issue date. Keywords: "Date", "Date de facture", "Facturé le", "Invoice date", "Date of issue". Usually the earliest date, near the invoice number. Never the payment deadline.
+   - due_date = payment deadline. Keywords (FR): "Échéance", "Date d'échéance", "À payer avant le", "Payable au", "Date limite de paiement", "Valable jusqu'au". (EN): "Due date", "Payment due", "Payable by", "Deadline". Usually ≥ the issue date — if two dates appear, the later one is usually due_date.
+   - period = the timeframe the invoiced work covers (not issue date, not deadline). Keywords: "Période", "Prestations du", "Mois de", "Billing period". Often a month or date range; null if the invoice is a one-off with no stated period.
+
+6. document_type must be exactly one of: invoice, tax_invoice.
+
+Output raw JSON only — no markdown fences, no commentary.
 """
 
 # Sanity check: this prompt template is identical for every image, so its
