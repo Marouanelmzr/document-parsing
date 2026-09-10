@@ -1,16 +1,19 @@
 import argparse
+import asyncio
+import base64
 import csv
+import io
 import json
 import re
 import sys
 import time
 from pathlib import Path
 
-import torch
+from openai import AsyncOpenAI
 from PIL import Image
-from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2_5_VLForConditionalGeneration
 
-MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct"
+# MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct"
+MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
 
 # Fixed schema shown to the model. This text never changes between invoices,
 # so prompt length is constant across the whole run -- only the image varies.
@@ -93,35 +96,12 @@ Output raw JSON only, no markdown fences, no commentary.
 FIXED_PROMPT_LEN_CHARS = len(PROMPT)
 
 
-def load_model():
-    quant_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.float16,
-        bnb_4bit_use_double_quant=True,
-    )
-    print(f"[info] loading {MODEL_ID} in 4-bit (NF4) for T4...")
-    model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-        MODEL_ID,
-        quantization_config=quant_config,
-        device_map="auto",
-        torch_dtype=torch.float16,
-    )
-    processor = AutoProcessor.from_pretrained(MODEL_ID)
-    return model, processor
-
-
-def build_inputs(processor, image: Image.Image):
-    messages = [{
-        "role": "user",
-        "content": [
-            {"type": "image", "image": image},
-            {"type": "text", "text": PROMPT},
-        ],
-    }]
-    text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    inputs = processor(text=[text], images=[image], padding=True, return_tensors="pt")
-    return inputs
+def image_to_data_url(image: Image.Image) -> str:
+    """Encode a PIL image as a base64 data URL for the OpenAI-style image_url content type."""
+    buf = io.BytesIO()
+    image.save(buf, format="JPEG")
+    b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+    return f"data:image/jpeg;base64,{b64}"
 
 
 def extract_json(raw_text: str):
@@ -138,7 +118,51 @@ def extract_json(raw_text: str):
         return None, cleaned
 
 
-def run(images_dir: Path, output_dir: Path, manifest_path: Path = None, max_new_tokens: int = 1500):
+async def annotate_one(client, sem, img_path: Path, raw_dir: Path, output_dir: Path,
+                        max_new_tokens: int, served_model: str):
+    async with sem:
+        image = Image.open(img_path).convert("RGB")
+        data_url = image_to_data_url(image)
+        stem = img_path.stem
+
+        try:
+            response = await client.chat.completions.create(
+                model=served_model,
+                messages=[{
+                    "role": "user",
+                    "content": [
+                        {"type": "image_url", "image_url": {"url": data_url}},
+                        {"type": "text", "text": PROMPT},
+                    ],
+                }],
+                max_tokens=max_new_tokens,
+                temperature=0,  # matches do_sample=False in the transformers version
+            )
+            raw_text = response.choices[0].message.content
+        except Exception as e:
+            print(f"[warn] request failed for {stem}: {e}")
+            return stem, False
+
+        parsed, cleaned = extract_json(raw_text)
+        (raw_dir / f"{stem}.txt").write_text(cleaned)
+
+        if parsed is None:
+            print(f"[warn] failed to parse JSON for {stem}")
+            return stem, False
+
+        record = {
+            "fields": parsed.get("fields", parsed),
+            "raw_text": cleaned,
+            "rag": {"retrieved_document_id": stem},
+        }
+        with open(output_dir / f"{stem}.json", "w") as f:
+            json.dump(record, f, indent=2, ensure_ascii=False)
+
+        return stem, True
+
+
+async def run_async(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens: int,
+                     server_url: str, api_key: str, served_model: str, concurrency: int):
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_dir = output_dir / "raw_text"
     raw_dir.mkdir(exist_ok=True)
@@ -150,49 +174,35 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path = None, max_new_
     else:
         image_files = sorted(p for p in images_dir.iterdir() if p.suffix.lower() in {".jpg", ".jpeg", ".png"})
 
+    image_files = [p for p in image_files if p.exists()]
+
     print(f"[info] {len(image_files)} images to annotate. Fixed prompt length: {FIXED_PROMPT_LEN_CHARS} chars.")
+    print(f"[info] vLLM server at {server_url} (served model: {served_model}), concurrency={concurrency}")
 
-    model, processor = load_model()
-    model.eval()
+    client = AsyncOpenAI(base_url=server_url, api_key=api_key)
+    sem = asyncio.Semaphore(concurrency)
 
-    failures = []
     t0 = time.time()
-    for i, img_path in enumerate(image_files):
-        if not img_path.exists():
-            print(f"[warn] missing file, skipping: {img_path}")
-            continue
-        image = Image.open(img_path).convert("RGB")
-        inputs = build_inputs(processor, image).to(model.device)
+    done_count = 0
+    failures = []
 
-        with torch.no_grad():
-            generated = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
+    tasks = [
+        annotate_one(client, sem, img_path, raw_dir, output_dir, max_new_tokens, served_model)
+        for img_path in image_files
+    ]
 
-        trimmed = generated[:, inputs["input_ids"].shape[1]:]
-        raw_text = processor.batch_decode(trimmed, skip_special_tokens=True)[0]
-
-        parsed, cleaned = extract_json(raw_text)
-        stem = img_path.stem
-
-        (raw_dir / f"{stem}.txt").write_text(cleaned)
-
-        if parsed is None:
+    for coro in asyncio.as_completed(tasks):
+        stem, ok = await coro
+        done_count += 1
+        if not ok:
             failures.append(stem)
-            print(f"[warn] ({i+1}/{len(image_files)}) failed to parse JSON for {stem}")
-            continue
-
-        record = {
-            "fields": parsed.get("fields", parsed),
-            "raw_text": cleaned,
-            "rag": {"retrieved_document_id": stem},
-        }
-        with open(output_dir / f"{stem}.json", "w") as f:
-            json.dump(record, f, indent=2, ensure_ascii=False)
-
-        if (i + 1) % 10 == 0:
+        if done_count % 10 == 0:
             elapsed = time.time() - t0
-            print(f"[info] {i+1}/{len(image_files)} done ({elapsed:.0f}s elapsed)")
+            print(f"[info] {done_count}/{len(image_files)} done ({elapsed:.0f}s elapsed)")
 
-    print(f"[done] {len(image_files) - len(failures)} succeeded, {len(failures)} failed to parse.")
+    elapsed = time.time() - t0
+    print(f"[done] {len(image_files) - len(failures)} succeeded, {len(failures)} failed, "
+          f"in {elapsed:.1f}s ({len(image_files) / elapsed:.2f} img/s)")
     if failures:
         (output_dir / "_failed_parses.txt").write_text("\n".join(failures))
         print(f"[info] failed ids written to {output_dir / '_failed_parses.txt'}")
@@ -201,16 +211,25 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path = None, max_new_
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--images-dir", required=True, type=Path)
-    ap.add_argument("--output-dir", default=Path("./qwen_annotations"), type=Path)
+    ap.add_argument("--output-dir", default=Path("./qwen_annotations_vllm_batched"), type=Path)
     ap.add_argument("--manifest", default=None, type=Path,
                      help="Optional manifest.csv from sample_fatura_dataset.py (uses filename column)")
     ap.add_argument("--max-new-tokens", default=1500, type=int)
+    ap.add_argument("--server-url", default="http://localhost:8000/v1",
+                     help="Base URL of the running vLLM OpenAI-compatible server")
+    ap.add_argument("--api-key", default="EMPTY", help="vLLM server doesn't check this by default")
+    ap.add_argument("--served-model", default=MODEL_ID,
+                     help="Model name as registered with `vllm serve` (usually same as MODEL_ID)")
+    ap.add_argument("--concurrency", default=6, type=int,
+                     help="Max number of in-flight requests sent to the server at once. "
+                          "This is what lets vLLM's continuous batching actually kick in.")
     args = ap.parse_args()
 
     if not args.images_dir.exists():
         sys.exit(f"[error] images dir not found: {args.images_dir}")
 
-    run(args.images_dir, args.output_dir, args.manifest, args.max_new_tokens)
+    asyncio.run(run_async(args.images_dir, args.output_dir, args.manifest, args.max_new_tokens,
+                           args.server_url, args.api_key, args.served_model, args.concurrency))
 
 
 if __name__ == "__main__":
