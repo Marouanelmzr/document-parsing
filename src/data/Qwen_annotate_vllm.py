@@ -13,7 +13,8 @@ from openai import AsyncOpenAI
 from PIL import Image
 
 # MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct"
-MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
+# MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
+MODEL_ID = "cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit"
 
 # Fixed schema shown to the model. This text never changes between invoices,
 # so prompt length is constant across the whole run -- only the image varies.
