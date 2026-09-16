@@ -17,7 +17,7 @@ from src.data.Fatura_schema_conversion import (
 ANNOTATIONS_DIR = Path("data/invoices/raw/Annotations/Original_Format")
 OUTPUT_PATH = Path("data/invoices/processed/fatura_test_output.json")
 
-TEMPLATE_ID = "Template25"
+TEMPLATE_ID = "Template12"
 N_CALIBRATION = 10
 N_TEST = 10
 
