@@ -5,54 +5,148 @@ import re
 import sys
 import time
 from pathlib import Path
+from typing import List, Literal, Optional
 
 from PIL import Image
+from pydantic import BaseModel
 from vllm import LLM, SamplingParams
+from vllm.sampling_params import GuidedDecodingParams
+# NOTE: on very recent vLLM builds (main branch, post structured-outputs
+# rename) this becomes:
+#   from vllm.sampling_params import StructuredOutputsParams as GuidedDecodingParams
+# and SamplingParams(guided_decoding=...) becomes SamplingParams(structured_outputs=...).
+# If GuidedDecodingParams import fails, swap in the two lines above.
 
 # MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct"
 # MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
 MODEL_ID = "cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit"
 
-# Fixed schema shown to the model. This text never changes between invoices,
-# so prompt length is constant across the whole run -- only the image varies.
-TARGET_SCHEMA = {
-    "fields": {
-        "supplier_name": "<string>",
-        "supplier_phone_number": "<string>",
-        "supplier_address": {
-            "address": "<string>", "street_number": "<string>", "street_name": "<string>",
-            "po_box": "<string>", "address_complement": "<string, e.g. floor/building/suite>",
-            "city": "<string>", "postal_code": "<string>", "state": "<string>", "country": "<string>"
-        },
-        "customer_name": "<string>",
-        "customer_address": {
-            "address": "<string>", "street_number": "<string>", "street_name": "<string>",
-            "po_box": "<string>", "address_complement": "<string, e.g. floor/building/suite>",
-            "city": "<string>", "postal_code": "<string>", "state": "<string>", "country": "<string>"
-        },
-        "invoice_number": "<string>",
-        "document_type": "<classification>",
-        "date": "<date>",
-        "due_date": "<date>",
-        "period": "<date>",
-        "locale": {"language": "<string, ISO 639-1>", "country": "<string, ISO 3166-1 alpha-2>", "currency": "<string, ISO 4217>"},
-        "total_net": "<number, total before taxes>",
-        "total_tax": "<number>",
-        "total_amount": "<number, final total the customer owes>",
-        "taxes": [{"rate": "<number, decimal e.g. 0.20>", "base": "<number, amount tax computed on>", "amount": "<number>"}],
-        "line_items": [{
-            "description": "<string>", "quantity": "<number>", "unit_price": "<number>",
-            "total_price": "<number, printed line total>",
-            "tax_amount": "<number>", "tax_rate": "<number, decimal>", "unit_measure": "<string>"
-        }],
-    },
-}
+
+# Schema, defined once as Pydantic models. This is the single source of
+# truth used for guided decoding (actual enforcement). The compact
+# TypeScript-style string shown to the model in the prompt (TS_SCHEMA,
+# below) is a hand-written mirror of these same fields -- kept in sync
+# manually since it exists purely to make the prompt cheap and readable,
+# not to drive enforcement.
+class Address(BaseModel):
+    address: Optional[str] = None
+    street_number: Optional[str] = None
+    street_name: Optional[str] = None
+    po_box: Optional[str] = None
+    address_complement: Optional[str] = None
+    city: Optional[str] = None
+    postal_code: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = None
+
+
+class Locale(BaseModel):
+    language: Optional[str] = None
+    country: Optional[str] = None
+    currency: Optional[str] = None
+
+
+class Tax(BaseModel):
+    rate: Optional[float] = None
+    base: Optional[float] = None
+    amount: Optional[float] = None
+
+
+class LineItem(BaseModel):
+    description: Optional[str] = None
+    quantity: Optional[float] = None
+    unit_price: Optional[float] = None
+    total_price: Optional[float] = None
+    tax_amount: Optional[float] = None
+    tax_rate: Optional[float] = None
+    unit_measure: Optional[str] = None
+
+
+class InvoiceFields(BaseModel):
+    supplier_name: Optional[str] = None
+    supplier_phone_number: Optional[str] = None
+    supplier_address: Optional[Address] = None
+    customer_name: Optional[str] = None
+    customer_address: Optional[Address] = None
+    invoice_number: Optional[str] = None
+    document_type: Optional[Literal["invoice", "tax_invoice"]] = None
+    date: Optional[str] = None
+    due_date: Optional[str] = None
+    period: Optional[str] = None
+    locale: Optional[Locale] = None
+    total_net: Optional[float] = None
+    total_tax: Optional[float] = None
+    total_amount: Optional[float] = None
+    taxes: List[Tax] = []
+    line_items: List[LineItem] = []
+
+
+class InvoiceExtraction(BaseModel):
+    fields: InvoiceFields
+
+
+# Compact TypeScript-style schema shown in the prompt. Far fewer tokens than
+# the old json.dumps() placeholder object, and reads naturally to the model.
+TS_SCHEMA = """type Address = {
+  address: string | null;
+  street_number: string | null;
+  street_name: string | null;
+  po_box: string | null;
+  address_complement: string | null; // e.g. floor/building/suite
+  city: string | null;
+  postal_code: string | null;
+  state: string | null;
+  country: string | null;
+};
+
+type Locale = {
+  language: string | null;  // ISO 639-1
+  country: string | null;   // ISO 3166-1 alpha-2
+  currency: string | null;  // ISO 4217
+};
+
+type Tax = {
+  rate: number | null;   // decimal, e.g. 0.20
+  base: number | null;   // amount tax computed on
+  amount: number | null;
+};
+
+type LineItem = {
+  description: string | null;
+  quantity: number | null;
+  unit_price: number | null;
+  total_price: number | null;  // printed line total
+  tax_amount: number | null;
+  tax_rate: number | null;     // decimal
+  unit_measure: string | null;
+};
+
+type Invoice = {
+  fields: {
+    supplier_name: string | null;
+    supplier_phone_number: string | null;
+    supplier_address: Address | null;
+    customer_name: string | null;
+    customer_address: Address | null;
+    invoice_number: string | null;
+    document_type: "invoice" | "tax_invoice" | null;
+    date: string | null;      // invoice issue date
+    due_date: string | null;  // payment deadline
+    period: string | null;    // billing period covered
+    locale: Locale | null;
+    total_net: number | null;    // total before taxes
+    total_tax: number | null;
+    total_amount: number | null; // final total the customer owes
+    taxes: Tax[];
+    line_items: LineItem[];
+  };
+};"""
 
 PROMPT = f"""You are an information-extraction engine for invoice images. Read the attached invoice image and extract every field you can find.
 
-Return ONLY a single valid JSON object matching this shape exactly (placeholders like "<number>"/"<date>" show the expected type; use null when a field isn't found, [] for empty lists, and add no extra keys):
+Extract fields matching this shape (null when a field isn't found, [] for empty lists):
 
-{json.dumps(TARGET_SCHEMA, separators=(',', ':'))}
+{TS_SCHEMA}
 
 CRITICAL RULES:
 
@@ -70,8 +164,6 @@ CRITICAL RULES:
    - period = the timeframe the invoiced work covers (not issue date, not deadline). Keywords: "Période", "Prestations du", "Mois de", "Billing period". Often a month or date range; null if the invoice is a one-off with no stated period.
 
 6. document_type must be exactly one of: invoice, tax_invoice.
-
-Output raw JSON only — no markdown fences, no commentary.
 """
 
 # Sanity check: this prompt template is identical for every image, so its
@@ -84,7 +176,11 @@ PATCH_PIXELS = 28 * 28
 
 
 def extract_json(raw_text: str):
-    """Best-effort extraction of the JSON object from the model's raw output."""
+    """Fallback parser only. Schema *enforcement* is now done by vLLM's guided
+    decoding (see run()), which constrains generation so the model can't
+    emit markdown fences, extra keys, or the wrong types in the first place.
+    This is kept purely as a defensive net for the rare edge case where the
+    raw text isn't clean JSON (e.g. a truncated generation)."""
     cleaned = re.sub(r"```json|```", "", raw_text).strip()
     start = cleaned.find("{")
     end = cleaned.rfind("}")
@@ -98,13 +194,7 @@ def extract_json(raw_text: str):
 
 
 def build_conversation(img_path: Path, size_log: list):
-    """Build one chat conversation for a single invoice image.
-
-    Offline batching doesn't need a base64 data URL -- vLLM's chat() accepts
-    a PIL.Image directly via the "image" content type. min_pixels/max_pixels
-    are set globally on the LLM via mm_processor_kwargs (see run()), so we just
-    log each image's native size here to monitor how much resizing is happening.
-    """
+    """Build one chat conversation for a single invoice image."""
     image = Image.open(img_path).convert("RGB")
     w, h = image.size
     size_log.append({"stem": img_path.stem, "width": w, "height": h, "pixels": w * h})
@@ -118,16 +208,23 @@ def build_conversation(img_path: Path, size_log: list):
 
 
 def process_output(stem: str, raw_text: str, raw_dir: Path, output_dir: Path) -> bool:
-    parsed, cleaned = extract_json(raw_text)
-    (raw_dir / f"{stem}.txt").write_text(cleaned)
+    (raw_dir / f"{stem}.txt").write_text(raw_text)
 
-    if parsed is None:
-        print(f"[warn] failed to parse JSON for {stem}")
-        return False
+    # Guided decoding means raw_text should already be exactly-schema-shaped
+    # JSON, so try the cheap direct parse first.
+    try:
+        parsed = json.loads(raw_text)
+    except json.JSONDecodeError:
+        parsed, cleaned = extract_json(raw_text)
+        if parsed is None:
+            print(f"[warn] guided-decoded output for {stem} was not valid JSON "
+                  f"(unexpected) -- see raw_text/{stem}.txt")
+            return False
+        print(f"[warn] {stem} needed extract_json fallback despite guided decoding")
 
     record = {
         "fields": parsed.get("fields", parsed),
-        "raw_text": cleaned,
+        "raw_text": raw_text,
         "rag": {"retrieved_document_id": stem},
     }
     with open(output_dir / f"{stem}.json", "w") as f:
@@ -179,7 +276,7 @@ def summarize_sizes(size_log: list, min_pixels: int, max_pixels: int, output_dir
 
 def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens: int,
         served_model: str, dtype: str, max_model_len: int, gpu_memory_utilization: float,
-        batch_size: int, min_pixels: int, max_pixels: int):
+        batch_size: int, min_pixels: int, max_pixels: int, guided_decoding_backend: str):
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_dir = output_dir / "raw_text"
     raw_dir.mkdir(exist_ok=True)
@@ -199,10 +296,8 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens:
     print(f"[info] processing in batches of {batch_size} to bound memory usage")
     print(f"[info] min_pixels={min_pixels:,} max_pixels={max_pixels:,} "
           f"(up to ~{max_image_tokens} image tokens; max_model_len={max_model_len})")
+    print(f"[info] schema enforced via guided decoding (backend={guided_decoding_backend})")
 
-    # Same engine args as the `vllm serve` invocation, plus min_pixels/max_pixels
-    # forwarded to Qwen's image processor via mm_processor_kwargs. This is what
-    # controls/monitors the resolution every image gets resized to before encoding.
     llm = LLM(
         model=served_model,
         dtype=dtype,
@@ -210,12 +305,23 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens:
         max_model_len=max_model_len,
         gpu_memory_utilization=gpu_memory_utilization,
         enforce_eager=True,
+        guided_decoding_backend=guided_decoding_backend,
         mm_processor_kwargs={
             "min_pixels": min_pixels,
             "max_pixels": max_pixels,
         },
     )
-    sampling_params = SamplingParams(temperature=0, max_tokens=max_new_tokens)
+
+    # Schema enforcement happens here: the JSON schema from our Pydantic models
+    # constrains token-by-token generation so the model literally cannot emit
+    # markdown fences, extra/missing keys, or a document_type outside the
+    # allowed enum. This replaces relying on extract_json for correctness.
+    guided_decoding_params = GuidedDecodingParams(json=InvoiceExtraction.model_json_schema())
+    sampling_params = SamplingParams(
+        temperature=0,
+        max_tokens=max_new_tokens,
+        guided_decoding=guided_decoding_params,
+    )
 
     t0 = time.time()
     done_count = 0
@@ -263,7 +369,7 @@ def main():
                      help="HF repo id or local path passed to vllm.LLM(model=...)")
     ap.add_argument("--dtype", default="float16")
     ap.add_argument("--max-model-len", default=8192, type=int,
-                     help="Raised from 4096: prompt (~1k tokens) + max-new-tokens (1500) + "
+                     help="Prompt (~compact now, but still non-trivial) + max-new-tokens + "
                           "up to max-pixels/784 image tokens must all fit in this budget.")
     ap.add_argument("--gpu-memory-utilization", default=0.95, type=float)
     ap.add_argument("--batch-size", default=200, type=int,
@@ -273,9 +379,10 @@ def main():
                           "Small/blurry scans get upscaled to at least this before encoding.")
     ap.add_argument("--max-pixels", default=2048 * PATCH_PIXELS, type=int,
                      help="Ceiling on resized image pixel count (default 2048 tokens' worth, "
-                          "~1.6MP), tuned for legible small text on invoices. Raising this "
-                          "improves fine-print/small-table accuracy but costs more tokens "
-                          "and needs headroom in --max-model-len.")
+                          "~1.6MP), tuned for legible small text on invoices.")
+    ap.add_argument("--guided-decoding-backend", default="xgrammar",
+                     help="vLLM structured-output backend (xgrammar recommended; "
+                          "outlines/lm-format-enforcer also supported depending on version)")
     args = ap.parse_args()
 
     if not args.images_dir.exists():
@@ -283,7 +390,7 @@ def main():
 
     run(args.images_dir, args.output_dir, args.manifest, args.max_new_tokens,
         args.served_model, args.dtype, args.max_model_len, args.gpu_memory_utilization,
-        args.batch_size, args.min_pixels, args.max_pixels)
+        args.batch_size, args.min_pixels, args.max_pixels, args.guided_decoding_backend)
 
 
 if __name__ == "__main__":
