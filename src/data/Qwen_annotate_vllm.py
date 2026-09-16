@@ -1,16 +1,13 @@
 import argparse
-import asyncio
-import base64
 import csv
-import io
 import json
 import re
 import sys
 import time
 from pathlib import Path
 
-from openai import AsyncOpenAI
 from PIL import Image
+from vllm import LLM, SamplingParams
 
 # MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct"
 # MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
@@ -82,14 +79,6 @@ Output raw JSON only — no markdown fences, no commentary.
 FIXED_PROMPT_LEN_CHARS = len(PROMPT)
 
 
-def image_to_data_url(image: Image.Image) -> str:
-    """Encode a PIL image as a base64 data URL for the OpenAI-style image_url content type."""
-    buf = io.BytesIO()
-    image.save(buf, format="JPEG")
-    b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
-    return f"data:image/jpeg;base64,{b64}"
-
-
 def extract_json(raw_text: str):
     """Best-effort extraction of the JSON object from the model's raw output."""
     cleaned = re.sub(r"```json|```", "", raw_text).strip()
@@ -104,51 +93,50 @@ def extract_json(raw_text: str):
         return None, cleaned
 
 
-async def annotate_one(client, sem, img_path: Path, raw_dir: Path, output_dir: Path,
-                        max_new_tokens: int, served_model: str):
-    async with sem:
-        image = Image.open(img_path).convert("RGB")
-        data_url = image_to_data_url(image)
-        stem = img_path.stem
+def build_conversation(img_path: Path):
+    """Build one chat conversation for a single invoice image.
 
-        try:
-            response = await client.chat.completions.create(
-                model=served_model,
-                messages=[{
-                    "role": "user",
-                    "content": [
-                        {"type": "image_url", "image_url": {"url": data_url}},
-                        {"type": "text", "text": PROMPT},
-                    ],
-                }],
-                max_tokens=max_new_tokens,
-                temperature=0,  # matches do_sample=False in the transformers version
-            )
-            raw_text = response.choices[0].message.content
-        except Exception as e:
-            print(f"[warn] request failed for {stem}: {e}")
-            return stem, False
-
-        parsed, cleaned = extract_json(raw_text)
-        (raw_dir / f"{stem}.txt").write_text(cleaned)
-
-        if parsed is None:
-            print(f"[warn] failed to parse JSON for {stem}")
-            return stem, False
-
-        record = {
-            "fields": parsed.get("fields", parsed),
-            "raw_text": cleaned,
-            "rag": {"retrieved_document_id": stem},
-        }
-        with open(output_dir / f"{stem}.json", "w") as f:
-            json.dump(record, f, indent=2, ensure_ascii=False)
-
-        return stem, True
+    Offline batching doesn't need a base64 data URL -- vLLM's chat() accepts
+    a PIL.Image directly via the "image" content type, so the image is
+    just opened and handed straight to the engine.
+    """
+    image = Image.open(img_path).convert("RGB")
+    return [{
+        "role": "user",
+        "content": [
+            {"type": "image", "image": image},
+            {"type": "text", "text": PROMPT},
+        ],
+    }]
 
 
-async def run_async(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens: int,
-                     server_url: str, api_key: str, served_model: str, concurrency: int):
+def process_output(stem: str, raw_text: str, raw_dir: Path, output_dir: Path) -> bool:
+    parsed, cleaned = extract_json(raw_text)
+    (raw_dir / f"{stem}.txt").write_text(cleaned)
+
+    if parsed is None:
+        print(f"[warn] failed to parse JSON for {stem}")
+        return False
+
+    record = {
+        "fields": parsed.get("fields", parsed),
+        "raw_text": cleaned,
+        "rag": {"retrieved_document_id": stem},
+    }
+    with open(output_dir / f"{stem}.json", "w") as f:
+        json.dump(record, f, indent=2, ensure_ascii=False)
+
+    return True
+
+
+def chunked(seq, size):
+    for i in range(0, len(seq), size):
+        yield seq[i:i + size]
+
+
+def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens: int,
+        served_model: str, dtype: str, max_model_len: int, gpu_memory_utilization: float,
+        batch_size: int):
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_dir = output_dir / "raw_text"
     raw_dir.mkdir(exist_ok=True)
@@ -163,32 +151,49 @@ async def run_async(images_dir: Path, output_dir: Path, manifest_path: Path, max
     image_files = [p for p in image_files if p.exists()]
 
     print(f"[info] {len(image_files)} images to annotate. Fixed prompt length: {FIXED_PROMPT_LEN_CHARS} chars.")
-    print(f"[info] vLLM server at {server_url} (served model: {served_model}), concurrency={concurrency}")
+    print(f"[info] loading {served_model} via vLLM offline LLM() -- no HTTP server involved")
+    print(f"[info] processing in batches of {batch_size} to bound memory usage")
 
-    client = AsyncOpenAI(base_url=server_url, api_key=api_key)
-    sem = asyncio.Semaphore(concurrency)
+    # Same engine args as the `vllm serve` invocation, just passed straight to LLM().
+    llm = LLM(
+        model=served_model,
+        dtype=dtype,
+        limit_mm_per_prompt={"image": 1},
+        max_model_len=max_model_len,
+        gpu_memory_utilization=gpu_memory_utilization,
+        enforce_eager=True,
+    )
+    sampling_params = SamplingParams(temperature=0, max_tokens=max_new_tokens)
 
     t0 = time.time()
     done_count = 0
     failures = []
 
-    tasks = [
-        annotate_one(client, sem, img_path, raw_dir, output_dir, max_new_tokens, served_model)
-        for img_path in image_files
-    ]
+    # Only one batch's worth of PIL images / conversations is held in memory at
+    # a time; 
+    # vLLM schedules and batches the requests internally during this offline
+    # llm.chat() call. The outer batch_size only controls how many documents
+    # are held in host memory at once.
+    for batch_paths in chunked(image_files, batch_size):
+        stems = [p.stem for p in batch_paths]
+        conversations = [build_conversation(p) for p in batch_paths]
 
-    for coro in asyncio.as_completed(tasks):
-        stem, ok = await coro
-        done_count += 1
-        if not ok:
-            failures.append(stem)
-        if done_count % 10 == 0:
-            elapsed = time.time() - t0
-            print(f"[info] {done_count}/{len(image_files)} done ({elapsed:.0f}s elapsed)")
+        outputs = llm.chat(conversations, sampling_params)
+
+        for stem, output in zip(stems, outputs):
+            raw_text = output.outputs[0].text
+            ok = process_output(stem, raw_text, raw_dir, output_dir)
+            if not ok:
+                failures.append(stem)
+
+        done_count += len(batch_paths)
+        elapsed = time.time() - t0
+        print(f"[info] {done_count}/{len(image_files)} done ({elapsed:.0f}s elapsed)")
 
     elapsed = time.time() - t0
-    print(f"[done] {len(image_files) - len(failures)} succeeded, {len(failures)} failed, "
-          f"in {elapsed:.1f}s ({len(image_files) / elapsed:.2f} img/s)")
+    n = len(image_files)
+    print(f"[done] {n - len(failures)} succeeded, {len(failures)} failed, "
+          f"in {elapsed:.1f}s ({n / elapsed:.2f} img/s)")
     if failures:
         (output_dir / "_failed_parses.txt").write_text("\n".join(failures))
         print(f"[info] failed ids written to {output_dir / '_failed_parses.txt'}")
@@ -197,25 +202,25 @@ async def run_async(images_dir: Path, output_dir: Path, manifest_path: Path, max
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--images-dir", required=True, type=Path)
-    ap.add_argument("--output-dir", default=Path("./qwen_annotations_vllm_batched"), type=Path)
+    ap.add_argument("--output-dir", default=Path("./qwen_annotations_vllm_offline"), type=Path)
     ap.add_argument("--manifest", default=None, type=Path,
                      help="Optional manifest.csv from sample_fatura_dataset.py (uses filename column)")
     ap.add_argument("--max-new-tokens", default=1500, type=int)
-    ap.add_argument("--server-url", default="http://localhost:8000/v1",
-                     help="Base URL of the running vLLM OpenAI-compatible server")
-    ap.add_argument("--api-key", default="EMPTY", help="vLLM server doesn't check this by default")
     ap.add_argument("--served-model", default=MODEL_ID,
-                     help="Model name as registered with `vllm serve` (usually same as MODEL_ID)")
-    ap.add_argument("--concurrency", default=6, type=int,
-                     help="Max number of in-flight requests sent to the server at once. "
-                          "This is what lets vLLM's continuous batching actually kick in.")
+                     help="HF repo id or local path passed to vllm.LLM(model=...)")
+    ap.add_argument("--dtype", default="float16")
+    ap.add_argument("--max-model-len", default=4096, type=int)
+    ap.add_argument("--gpu-memory-utilization", default=0.95, type=float)
+    ap.add_argument("--batch-size", default=200, type=int,
+                     help="Number of images to load and submit to llm.chat() per offline batch")
     args = ap.parse_args()
 
     if not args.images_dir.exists():
         sys.exit(f"[error] images dir not found: {args.images_dir}")
 
-    asyncio.run(run_async(args.images_dir, args.output_dir, args.manifest, args.max_new_tokens,
-                           args.server_url, args.api_key, args.served_model, args.concurrency))
+    run(args.images_dir, args.output_dir, args.manifest, args.max_new_tokens,
+        args.served_model, args.dtype, args.max_model_len, args.gpu_memory_utilization,
+        args.batch_size)
 
 
 if __name__ == "__main__":
