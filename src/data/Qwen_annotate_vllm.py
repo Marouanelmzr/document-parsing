@@ -205,8 +205,8 @@ def build_conversation(img_path: Path, size_log: list):
     return [{
         "role": "user",
         "content": [
-            {"type": "text", "text": PROMPT},
             {"type": "image_pil", "image_pil": image}, 
+            {"type": "text", "text": PROMPT},
         ],
     }]
 

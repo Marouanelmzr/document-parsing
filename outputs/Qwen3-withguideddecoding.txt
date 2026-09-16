@@ -1,0 +1,79 @@
+[info] 20 images to annotate. Fixed prompt length: 3728 chars.
+[info] loading cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit via vLLM offline LLM() -- no HTTP server involved
+[info] processing in batches of 200 to bound memory usage
+[info] min_pixels=200,704 max_pixels=1,605,632 (up to ~2048 image tokens; max_model_len=8192)
+[info] schema enforced via guided decoding (backend=xgrammar)
+INFO 09-16 12:08:05 [api_utils.py:286] non-default args: {'dtype': 'float16', 'max_model_len': 8192, 'enable_prefix_caching': True, 'gpu_memory_utilization': 0.95, 'disable_log_stats': True, 'enforce_eager': True, 'limit_mm_per_prompt': {'image': 1}, 'mm_processor_kwargs': {'min_pixels': 200704, 'max_pixels': 1605632}, 'structured_outputs_config': StructuredOutputsConfig(backend='xgrammar', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), 'model': 'cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit'}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+config.json: 100% 7.53k/7.53k [00:00<00:00, 19.2MB/s]
+INFO 09-16 12:08:22 [model.py:684] Resolved architecture: Qwen3VLForConditionalGeneration
+WARNING 09-16 12:08:22 [model.py:2355] Casting torch.bfloat16 to torch.float16.
+INFO 09-16 12:08:22 [model.py:2021] Using max model len 8192
+preprocessor_config.json: 100% 753/753 [00:00<00:00, 3.31MB/s]
+WARNING 09-16 12:08:22 [model.py:981] Model does not support mm_device_do_normalize, forcing mm_device_do_normalize = False.
+tokenizer_config.json: 100% 5.45k/5.45k [00:00<00:00, 13.1MB/s]
+vocab.json: 100% 2.78M/2.78M [00:00<00:00, 106MB/s]
+merges.txt: 100% 1.67M/1.67M [00:00<00:00, 116MB/s]
+tokenizer.json: 100% 11.4M/11.4M [00:00<00:00, 155MB/s]
+added_tokens.json: 100% 707/707 [00:00<00:00, 3.32MB/s]
+special_tokens_map.json: 100% 613/613 [00:00<00:00, 2.49MB/s]
+chat_template.jinja: 100% 5.29k/5.29k [00:00<00:00, 15.1MB/s]
+INFO 09-16 12:08:28 [scheduler.py:277] Chunked prefill is enabled with max_num_batched_tokens=8192.
+WARNING 09-16 12:08:28 [vllm.py:1371] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+WARNING 09-16 12:08:28 [vllm.py:1406] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+INFO 09-16 12:08:28 [kernel.py:369] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'])
+INFO 09-16 12:08:28 [vllm.py:1585] Cudagraph is disabled under eager mode
+INFO 09-16 12:08:29 [compilation.py:329] Enabled custom fusions: norm_quant, act_quant
+generation_config.json: 100% 218/218 [00:00<00:00, 954kB/s]
+video_preprocessor_config.json: 100% 861/861 [00:00<00:00, 3.37MB/s]
+[transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+(EngineCore pid=5176) INFO 09-16 12:08:48 [core.py:123] Initializing a V1 LLM engine (v0.29.0) with config: model='cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit', speculative_config=None, tokenizer='cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit', skip_tokenizer_init=False, tokenizer_mode=auto, revision=main, tokenizer_revision=main, trust_remote_code=False, dtype=torch.float16, max_seq_len=8192, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=compressed-tensors, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='xgrammar', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, enable_bf16x3_router_gemm=False, moe_backend='auto', linear_backend='auto')
+(EngineCore pid=5176) INFO 09-16 12:08:49 [parallel_state.py:1775] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_425594509e2342b2a52997f403680521 backend=nccl
+(EngineCore pid=5176) INFO 09-16 12:08:49 [parallel_state.py:2119] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=5176) INFO 09-16 12:08:49 [gpu_worker.py:429] Using V2 Model Runner
+(EngineCore pid=5176) INFO 09-16 12:08:50 [model_runner.py:382] Loading model from scratch...
+(EngineCore pid=5176) ERROR 09-16 12:08:51 [fa_utils.py:212] Cannot use FA version 2 is not supported due to FA2 is only supported on devices with compute capability >= 8
+(EngineCore pid=5176) INFO 09-16 12:08:51 [mm_encoder_attention.py:372] Using AttentionBackendEnum.TORCH_SDPA for MMEncoderAttention.
+(EngineCore pid=5176) INFO 09-16 12:08:51 [kernel.py:369] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'])
+(EngineCore pid=5176) INFO 09-16 12:08:51 [compressed_tensors_wNa16.py:137] Using MarlinLinearKernel for CompressedTensorsWNA16
+(EngineCore pid=5176) INFO 09-16 12:08:55 [cuda.py:492] Using TRITON_ATTN attention backend out of potential backends: ['TRITON_ATTN', 'FLEX_ATTENTION'].
+model.safetensors.index.json: 100% 121k/121k [00:00<00:00, 188MB/s]
+(EngineCore pid=5176) INFO 09-16 12:10:36 [weight_utils.py:526] Time spent downloading weights for cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit: 100.110706 seconds
+(EngineCore pid=5176) INFO 09-16 12:10:36 [weight_utils.py:863] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 7.03 GiB. Available RAM: 9.41 GiB.
+(EngineCore pid=5176) INFO 09-16 12:10:36 [weight_utils.py:886] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+Loading safetensors checkpoint shards: 100% 2/2 [00:26<00:00, 13.36s/it]
+(EngineCore pid=5176) INFO 09-16 12:11:03 [default_loader.py:430] Loading weights took 26.82 seconds
+(EngineCore pid=5176) INFO 09-16 12:11:05 [model_runner.py:404] Model loading took 7.52 GiB memory and 134.556709 seconds
+(EngineCore pid=5176) WARNING 09-16 12:11:05 [topk_topp_sampler.py:69] FlashInfer top-p/top-k sampling unavailable: unsupported compute capability 7.5; falling back. Set VLLM_USE_FLASHINFER_SAMPLER=0 to silence.
+(EngineCore pid=5176) INFO 09-16 12:11:05 [utils.py:306] Using LBNHC KV cache layout.
+(EngineCore pid=5176) INFO 09-16 12:11:05 [encoder_runner.py:131] Encoder cache will be initialized with a budget of 8192 tokens, and profiled with 5 image items of the maximum feature size.
+(EngineCore pid=5176) INFO 09-16 12:11:22 [gpu_worker.py:625] Available KV cache memory: 4.91 GiB
+(EngineCore pid=5176) INFO 09-16 12:11:22 [kv_cache_utils.py:2032] GPU KV cache size: 35,744 tokens, Maximum concurrency for 8,192 tokens per request: 4.36x
+(EngineCore pid=5176) INFO 09-16 12:11:22 [kernel_warmup.py:124] JIT kernel warmup starting.
+(EngineCore pid=5176) INFO 09-16 12:11:22 [kernel_warmup.py:134] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=5176) INFO 09-16 12:11:24 [gpu_worker.py:860] Free memory on device (14.46/14.56 GiB) on startup. Desired GPU memory utilization is (0.95, 13.84 GiB). Actual usage is 7.84 GiB for consumed memory (weights + non-torch), 1.08 GiB for peak activation, and 0.0 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=5114946458` (4.76 GiB) to fit into requested memory, or `--kv-cache-memory=5786831360` (5.39 GiB) to fully utilize gpu memory. Current kv cache memory in use is 4.91 GiB.
+(EngineCore pid=5176) INFO 09-16 12:11:40 [jit_monitor.py:85] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=5176) INFO 09-16 12:11:40 [core.py:368] init engine (profile, create kv cache, warmup model) took 35.69 s
+(EngineCore pid=5176) INFO 09-16 12:11:41 [kernel.py:369] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'])
+INFO 09-16 12:11:45 [hf.py:547] Detected the chat template content format to be 'openai'. You can set `--chat-template-content-format` to override this.
+[transformers] Qwen3VL video processing does not apply the per-frame pixel cap the reference implementation (qwen-vl-utils) applies, so some videos cost far more tokens than they would there. In v5.22 the capped behavior will become the default and `cap_pixels_per_frame` will be removed. Pass `cap_pixels_per_frame=True` to adopt the reference behavior now, or `False` to keep the current behavior and silence this warning.
+INFO 09-16 12:12:07 [base.py:244] Multi-modal warmup completed in 21.887s
+INFO 09-16 12:12:07 [base.py:244] Readonly multi-modal warmup completed in 0.120s
+Rendering conversations: 100% 20/20 [00:01<00:00, 17.90it/s]
+Processed prompts:   0% 0/20 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s](EngineCore pid=5176) WARNING 09-16 12:12:09 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _bilinear_pos_embed_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=5176) WARNING 09-16 12:12:09 [jit_monitor.py:141] Triton kernel JIT compilation during inference: rotary_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=5176) WARNING 09-16 12:12:13 [jit_monitor.py:141] Triton kernel JIT compilation during inference: kernel_unified_attention. This causes a latency spike; consider extending warmup to cover this shape/config.
+[rank0]:[W916 12:12:13.473404808 CUDACachingAllocator.cpp:3933] memory allocation failed with OOM on device 0 while trying to allocate 402653184 bytes (free: 102563840, total: 15637086208).
+Processed prompts:  20% 4/20 [01:20<03:05, 11.59s/it, est. speed input: 72.27 toks/s, output: 19.18 toks/s](EngineCore pid=5176) WARNING 09-16 12:13:30 [jit_monitor.py:141] Triton kernel JIT compilation during inference: reduce_segments. This causes a latency spike; consider extending warmup to cover this shape/config.
+Processed prompts: 100% 20/20 [01:53<00:00,  5.68s/it, est. speed input: 256.48 toks/s, output: 96.15 toks/s]
+[info] 20/20 done (115s elapsed)
+[done] 20 succeeded, 0 failed, in 115.1s (0.17 img/s)
+[info] image size report: native pixels range [500,395 .. 500,395], mean 500,395
+[info] 0 images will be upscaled (native < min_pixels=200,704)
+[info] 0 images will be downscaled (native > max_pixels=1,605,632) -- check these for potential text loss
+[info] full report written to qwen3_annotations_test20/_image_size_report.json
+INFO 09-16 12:14:02 [utils.py:620] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=5176) INFO 09-16 12:14:02 [core.py:1350] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=5176) INFO 09-16 12:14:02 [core.py:1501] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=5176) INFO 09-16 12:14:02 [core.py:1532] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=5176) INFO 09-16 12:14:02 [core.py:1363] [shutdown] EngineCore: exiting busy loop
