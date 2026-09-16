@@ -10,12 +10,7 @@ from typing import List, Literal, Optional
 from PIL import Image
 from pydantic import BaseModel
 from vllm import LLM, SamplingParams
-from vllm.sampling_params import GuidedDecodingParams
-# NOTE: on very recent vLLM builds (main branch, post structured-outputs
-# rename) this becomes:
-#   from vllm.sampling_params import StructuredOutputsParams as GuidedDecodingParams
-# and SamplingParams(guided_decoding=...) becomes SamplingParams(structured_outputs=...).
-# If GuidedDecodingParams import fails, swap in the two lines above.
+from vllm.sampling_params import StructuredOutputsParams
 
 # MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct"
 # MODEL_ID = "Qwen/Qwen2.5-VL-7B-Instruct-AWQ"
@@ -194,15 +189,24 @@ def extract_json(raw_text: str):
 
 
 def build_conversation(img_path: Path, size_log: list):
-    """Build one chat conversation for a single invoice image."""
+    """Build one chat conversation for a single invoice image.
+
+    Text content is listed BEFORE the image on purpose: PROMPT is byte-identical
+    for every request, so putting it first makes the chat-header + instructions
+    + schema a literal shared token prefix across all 10k requests, which is
+    exactly what Automatic Prefix Caching (see run()) can reuse from the KV
+    cache. Only the image tokens at the tail differ per request. Putting the
+    image first (the old order) would make the *varying* tokens the prefix and
+    defeat caching entirely.
+    """
     image = Image.open(img_path).convert("RGB")
     w, h = image.size
     size_log.append({"stem": img_path.stem, "width": w, "height": h, "pixels": w * h})
     return [{
         "role": "user",
         "content": [
-            {"type": "image", "image": image},
             {"type": "text", "text": PROMPT},
+            {"type": "image_pil", "image_pil": image}, 
         ],
     }]
 
@@ -276,7 +280,7 @@ def summarize_sizes(size_log: list, min_pixels: int, max_pixels: int, output_dir
 
 def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens: int,
         served_model: str, dtype: str, max_model_len: int, gpu_memory_utilization: float,
-        batch_size: int, min_pixels: int, max_pixels: int, guided_decoding_backend: str):
+        batch_size: int, min_pixels: int, max_pixels: int, guided_decoding_backend: str, enable_prefix_caching: bool):
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_dir = output_dir / "raw_text"
     raw_dir.mkdir(exist_ok=True)
@@ -305,7 +309,8 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens:
         max_model_len=max_model_len,
         gpu_memory_utilization=gpu_memory_utilization,
         enforce_eager=True,
-        guided_decoding_backend=guided_decoding_backend,
+        structured_outputs_config={"backend": guided_decoding_backend},
+        enable_prefix_caching=enable_prefix_caching,
         mm_processor_kwargs={
             "min_pixels": min_pixels,
             "max_pixels": max_pixels,
@@ -316,11 +321,11 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens:
     # constrains token-by-token generation so the model literally cannot emit
     # markdown fences, extra/missing keys, or a document_type outside the
     # allowed enum. This replaces relying on extract_json for correctness.
-    guided_decoding_params = GuidedDecodingParams(json=InvoiceExtraction.model_json_schema())
+    structured_outputs_params = StructuredOutputsParams(json=InvoiceExtraction.model_json_schema())
     sampling_params = SamplingParams(
         temperature=0,
         max_tokens=max_new_tokens,
-        guided_decoding=guided_decoding_params,
+        structured_outputs=structured_outputs_params,
     )
 
     t0 = time.time()
@@ -383,6 +388,13 @@ def main():
     ap.add_argument("--guided-decoding-backend", default="xgrammar",
                      help="vLLM structured-output backend (xgrammar recommended; "
                           "outlines/lm-format-enforcer also supported depending on version)")
+    ap.add_argument("--enable-prefix-caching", dest="enable_prefix_caching",
+                     action="store_true", default=True,
+                     help="Cache the shared instruction/schema prefix across requests "
+                          "(on by default -- PROMPT is identical for every image).")
+    ap.add_argument("--no-prefix-caching", dest="enable_prefix_caching",
+                     action="store_false",
+                     help="Disable Automatic Prefix Caching.")
     args = ap.parse_args()
 
     if not args.images_dir.exists():
@@ -390,7 +402,7 @@ def main():
 
     run(args.images_dir, args.output_dir, args.manifest, args.max_new_tokens,
         args.served_model, args.dtype, args.max_model_len, args.gpu_memory_utilization,
-        args.batch_size, args.min_pixels, args.max_pixels, args.guided_decoding_backend)
+        args.batch_size, args.min_pixels, args.max_pixels, args.guided_decoding_backend, args.enable_prefix_caching)
 
 
 if __name__ == "__main__":
