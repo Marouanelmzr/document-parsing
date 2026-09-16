@@ -78,6 +78,10 @@ Output raw JSON only — no markdown fences, no commentary.
 # token length never varies across the run.
 FIXED_PROMPT_LEN_CHARS = len(PROMPT)
 
+# Qwen resizes to multiples of a 28x28 patch (14px ViT patch, 2x2 merge).
+# 1 visual token == 28*28 == 784 pixels after resizing.
+PATCH_PIXELS = 28 * 28
+
 
 def extract_json(raw_text: str):
     """Best-effort extraction of the JSON object from the model's raw output."""
@@ -93,14 +97,17 @@ def extract_json(raw_text: str):
         return None, cleaned
 
 
-def build_conversation(img_path: Path):
+def build_conversation(img_path: Path, size_log: list):
     """Build one chat conversation for a single invoice image.
 
     Offline batching doesn't need a base64 data URL -- vLLM's chat() accepts
-    a PIL.Image directly via the "image" content type, so the image is
-    just opened and handed straight to the engine.
+    a PIL.Image directly via the "image" content type. min_pixels/max_pixels
+    are set globally on the LLM via mm_processor_kwargs (see run()), so we just
+    log each image's native size here to monitor how much resizing is happening.
     """
     image = Image.open(img_path).convert("RGB")
+    w, h = image.size
+    size_log.append({"stem": img_path.stem, "width": w, "height": h, "pixels": w * h})
     return [{
         "role": "user",
         "content": [
@@ -134,9 +141,45 @@ def chunked(seq, size):
         yield seq[i:i + size]
 
 
+def summarize_sizes(size_log: list, min_pixels: int, max_pixels: int, output_dir: Path):
+    """Report how each image's *native* pixel count compares to the configured
+    min/max bounds, so under/over-sized scans in the dataset are visible before
+    they silently degrade extraction quality."""
+    if not size_log:
+        return
+
+    pixels = [r["pixels"] for r in size_log]
+    below_min = [r for r in size_log if r["pixels"] < min_pixels]
+    above_max = [r for r in size_log if r["pixels"] > max_pixels]
+
+    summary = {
+        "count": len(size_log),
+        "min_pixels_seen": min(pixels),
+        "max_pixels_seen": max(pixels),
+        "mean_pixels_seen": sum(pixels) / len(pixels),
+        "configured_min_pixels": min_pixels,
+        "configured_max_pixels": max_pixels,
+        "num_upscaled_below_min": len(below_min),
+        "num_downscaled_above_max": len(above_max),
+        "upscaled_examples": [r["stem"] for r in below_min[:10]],
+        "downscaled_examples": [r["stem"] for r in above_max[:10]],
+    }
+    with open(output_dir / "_image_size_report.json", "w") as f:
+        json.dump(summary, f, indent=2)
+
+    print(f"[info] image size report: native pixels range "
+          f"[{summary['min_pixels_seen']:,} .. {summary['max_pixels_seen']:,}], "
+          f"mean {summary['mean_pixels_seen']:,.0f}")
+    print(f"[info] {summary['num_upscaled_below_min']} images will be upscaled "
+          f"(native < min_pixels={min_pixels:,})")
+    print(f"[info] {summary['num_downscaled_above_max']} images will be downscaled "
+          f"(native > max_pixels={max_pixels:,}) -- check these for potential text loss")
+    print(f"[info] full report written to {output_dir / '_image_size_report.json'}")
+
+
 def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens: int,
         served_model: str, dtype: str, max_model_len: int, gpu_memory_utilization: float,
-        batch_size: int):
+        batch_size: int, min_pixels: int, max_pixels: int):
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_dir = output_dir / "raw_text"
     raw_dir.mkdir(exist_ok=True)
@@ -150,11 +193,16 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens:
 
     image_files = [p for p in image_files if p.exists()]
 
+    max_image_tokens = max_pixels // PATCH_PIXELS
     print(f"[info] {len(image_files)} images to annotate. Fixed prompt length: {FIXED_PROMPT_LEN_CHARS} chars.")
     print(f"[info] loading {served_model} via vLLM offline LLM() -- no HTTP server involved")
     print(f"[info] processing in batches of {batch_size} to bound memory usage")
+    print(f"[info] min_pixels={min_pixels:,} max_pixels={max_pixels:,} "
+          f"(up to ~{max_image_tokens} image tokens; max_model_len={max_model_len})")
 
-    # Same engine args as the `vllm serve` invocation, just passed straight to LLM().
+    # Same engine args as the `vllm serve` invocation, plus min_pixels/max_pixels
+    # forwarded to Qwen's image processor via mm_processor_kwargs. This is what
+    # controls/monitors the resolution every image gets resized to before encoding.
     llm = LLM(
         model=served_model,
         dtype=dtype,
@@ -162,21 +210,24 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens:
         max_model_len=max_model_len,
         gpu_memory_utilization=gpu_memory_utilization,
         enforce_eager=True,
+        mm_processor_kwargs={
+            "min_pixels": min_pixels,
+            "max_pixels": max_pixels,
+        },
     )
     sampling_params = SamplingParams(temperature=0, max_tokens=max_new_tokens)
 
     t0 = time.time()
     done_count = 0
     failures = []
+    size_log = []
 
     # Only one batch's worth of PIL images / conversations is held in memory at
-    # a time; 
-    # vLLM schedules and batches the requests internally during this offline
-    # llm.chat() call. The outer batch_size only controls how many documents
-    # are held in host memory at once.
+    # a time; vLLM still continuously batches/schedules requests within each
+    # llm.chat() call.
     for batch_paths in chunked(image_files, batch_size):
         stems = [p.stem for p in batch_paths]
-        conversations = [build_conversation(p) for p in batch_paths]
+        conversations = [build_conversation(p, size_log) for p in batch_paths]
 
         outputs = llm.chat(conversations, sampling_params)
 
@@ -198,6 +249,8 @@ def run(images_dir: Path, output_dir: Path, manifest_path: Path, max_new_tokens:
         (output_dir / "_failed_parses.txt").write_text("\n".join(failures))
         print(f"[info] failed ids written to {output_dir / '_failed_parses.txt'}")
 
+    summarize_sizes(size_log, min_pixels, max_pixels, output_dir)
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -209,10 +262,20 @@ def main():
     ap.add_argument("--served-model", default=MODEL_ID,
                      help="HF repo id or local path passed to vllm.LLM(model=...)")
     ap.add_argument("--dtype", default="float16")
-    ap.add_argument("--max-model-len", default=4096, type=int)
+    ap.add_argument("--max-model-len", default=8192, type=int,
+                     help="Raised from 4096: prompt (~1k tokens) + max-new-tokens (1500) + "
+                          "up to max-pixels/784 image tokens must all fit in this budget.")
     ap.add_argument("--gpu-memory-utilization", default=0.95, type=float)
     ap.add_argument("--batch-size", default=200, type=int,
                      help="Number of images to load and submit to llm.chat() per offline batch")
+    ap.add_argument("--min-pixels", default=256 * PATCH_PIXELS, type=int,
+                     help="Floor on resized image pixel count (default 256 tokens' worth). "
+                          "Small/blurry scans get upscaled to at least this before encoding.")
+    ap.add_argument("--max-pixels", default=2048 * PATCH_PIXELS, type=int,
+                     help="Ceiling on resized image pixel count (default 2048 tokens' worth, "
+                          "~1.6MP), tuned for legible small text on invoices. Raising this "
+                          "improves fine-print/small-table accuracy but costs more tokens "
+                          "and needs headroom in --max-model-len.")
     args = ap.parse_args()
 
     if not args.images_dir.exists():
@@ -220,7 +283,7 @@ def main():
 
     run(args.images_dir, args.output_dir, args.manifest, args.max_new_tokens,
         args.served_model, args.dtype, args.max_model_len, args.gpu_memory_utilization,
-        args.batch_size)
+        args.batch_size, args.min_pixels, args.max_pixels)
 
 
 if __name__ == "__main__":
