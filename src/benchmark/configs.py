@@ -82,9 +82,7 @@ CONFIGS: dict[str, ModelConfig] = {
         gpu_memory_utilization=0.90,
         batch_size=400,
         max_new_tokens=1000,
-        extra_llm_kwargs={
-            "quantization": "awq",
-        },
+        extra_llm_kwargs={},
     ),
 }
 
