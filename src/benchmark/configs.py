@@ -69,6 +69,7 @@ CONFIGS: dict[str, ModelConfig] = {
         key="nuextract3",
         model_id="numind/NuExtract3",  # confirm exact repo id/size variant before running
         family="nuextract",
+        dtype="float16", # remove for H100 inference
         max_model_len=8192,
         gpu_memory_utilization=0.90,
         batch_size=100,
