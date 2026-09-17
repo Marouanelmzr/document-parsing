@@ -71,7 +71,7 @@ CONFIGS: dict[str, ModelConfig] = {
         family="nuextract",
         max_model_len=8192,
         gpu_memory_utilization=0.90,
-        batch_size=400,
+        batch_size=100,
         extra_llm_kwargs={"trust_remote_code": True},
     ),
     "qwen8b_t4": ModelConfig(
@@ -81,7 +81,7 @@ CONFIGS: dict[str, ModelConfig] = {
         dtype="float16",
         max_model_len=8192,
         gpu_memory_utilization=0.90,
-        batch_size=400,
+        batch_size=100,
         max_new_tokens=1000,
         extra_llm_kwargs={},
     ),

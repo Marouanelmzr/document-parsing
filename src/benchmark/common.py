@@ -180,7 +180,7 @@ def run_extraction(*, images_dir: Path, output_dir: Path, llm_kwargs: dict,
         stems = [p.stem for p in batch_paths]
         conversations = [build_conversation(p, size_log) for p in batch_paths]
         extra = {"chat_template_kwargs": chat_template_kwargs} if chat_template_kwargs else {}
-        outputs = llm.chat(conversations, sampling_params, use_tqdm=False, **extra)
+        outputs = llm.chat(conversations, sampling_params, use_tqdm=True, **extra)
         for stem, output in zip(stems, outputs):
             if not process_output(stem, output.outputs[0].text, raw_dir, output_dir):
                 failures.append(stem)
