@@ -1,21 +1,18 @@
-# VLM inference
-vllm
-transformers
-accelerate
-bitsandbytes
 
-# Vision / image processing
-qwen-vl-utils
-Pillow
-
-# Structured JSON generation
-xgrammar
+vllm>=0.12.0
+transformers>=4.57.0
+accelerate>=1.0.0
+Pillow>=10.0.0
+xgrammar>=0.1.11
 
 # Benchmark / evaluation
-numpy
-pandas
-pydantic
-tqdm
+pydantic>=2.0
+
+
+huggingface_hub>=0.25.0
 
 # Data versioning
-dvc
+dvc>=3.0
+# Remote is DagsHub over HTTPS (.dvc/config). Plain `dvc` should cover an
+# HTTP(S) remote; if `dvc pull`/`dvc push` complain about a missing s3
+# backend, switch this line to `dvc[s3]` instead.
