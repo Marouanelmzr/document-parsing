@@ -78,6 +78,7 @@ CONFIGS: dict[str, ModelConfig] = {
         key="qwen8b_t4",
         model_id="cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit",
         family="vision_chat",
+        dtype="float16",
         max_model_len=8192,
         gpu_memory_utilization=0.90,
         batch_size=400,
