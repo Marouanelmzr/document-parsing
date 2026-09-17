@@ -1,4 +1,6 @@
 import sys
+import csv
+from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -14,73 +16,116 @@ from src.data.Fatura_schema_conversion import (
 )
 
 
-ANNOTATIONS_DIR = Path("data/invoices/raw/Annotations/Original_Format")
-OUTPUT_PATH = Path("data/invoices/processed/fatura_test_output.json")
+MANIFEST_PATH = Path(
+    "../data/invoices/raw/fatura_sample_400/manifest.csv"
+)
 
-TEMPLATE_ID = "Template12"
-N_CALIBRATION = 10
-N_TEST = 10
+ANNOTATIONS_DIR = Path(
+    "../data/invoices/raw/Annotations/Original_Format"
+)
+
+OUTPUT_PATH = Path(
+    "../data/invoices/processed/fatura_sample_400_output.json"
+)
 
 
-def load_annotations():
-    files = sorted(ANNOTATIONS_DIR.glob(f"{TEMPLATE_ID}_Instance*.json"))
+def load_manifest():
+    with open(MANIFEST_PATH, "r", newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
 
-    files = files[:N_CALIBRATION + N_TEST]
+    if not rows:
+        raise ValueError(f"No documents found in {MANIFEST_PATH}")
 
-    return {
-        f.stem: json.loads(f.read_text(encoding="utf-8"))
-        for f in files
-    }
+    return rows
+
+
+def load_annotations(rows):
+    annotations = {}
+
+    for row in rows:
+        stem = Path(row["filename"]).stem
+        annotation_path = ANNOTATIONS_DIR / f"{stem}.json"
+
+        if not annotation_path.exists():
+            raise FileNotFoundError(
+                f"Annotation not found for {row['filename']}: "
+                f"{annotation_path}"
+            )
+
+        annotations[stem] = json.loads(
+            annotation_path.read_text(encoding="utf-8")
+        )
+
+    return annotations
 
 
 def main():
-    annotations = load_annotations()
+    rows = load_manifest()
 
-    doc_ids = list(annotations)
+    print(f"Found {len(rows)} documents in manifest.")
 
-    calibration_ids = doc_ids[:N_CALIBRATION]
-    test_ids = doc_ids[N_CALIBRATION:]
+    by_template = defaultdict(list)
 
-    print(f"Found {len(doc_ids)} documents for {TEMPLATE_ID}")
-    print(f"Calibration: {len(calibration_ids)}")
-    print(f"Test: {len(test_ids)}")
+    for row in rows:
+        by_template[row["template_id"]].append(row)
 
-    # 1. Induce patterns from calibration documents
-    calibration_samples = {
-        TEMPLATE_ID: [
-            annotations[doc_id]
-            for doc_id in calibration_ids
+    print(f"Found {len(by_template)} templates.")
+
+    annotations = load_annotations(rows)
+
+    print(f"Loaded {len(annotations)} annotations.")
+
+    template_patterns = {}
+
+    for template_id, template_rows in sorted(by_template.items()):
+        doc_ids = [
+            Path(row["filename"]).stem
+            for row in template_rows
         ]
-    }
 
-    patterns = build_template_patterns(
-        calibration_samples,
-        min_samples=5,
-        min_coverage=0.95,
-    )
+        template_samples = {
+            template_id: [
+                annotations[doc_id]
+                for doc_id in doc_ids
+            ]
+        }
 
-    print("\n" + coverage_report(patterns))
+        patterns = build_template_patterns(
+            template_samples,
+            min_samples=5,
+            min_coverage=0.95,
+        )
 
-    # 2. Apply patterns to unseen documents
-    test_annotations = {
-        doc_id: annotations[doc_id]
-        for doc_id in test_ids
-    }
+        template_patterns.update(patterns)
+
+        print(
+            f"\n{template_id}: "
+            f"{len(doc_ids)} documents used for pattern induction"
+        )
+
+        print(coverage_report(patterns))
 
     template_ids = {
-        doc_id: TEMPLATE_ID
-        for doc_id in test_ids
+        Path(row["filename"]).stem: row["template_id"]
+        for row in rows
     }
 
     converted = convert_dataset(
-        test_annotations,
-        template_patterns=patterns,
+        annotations,
+        template_patterns=template_patterns,
         template_ids=template_ids,
     )
 
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+
     save_json(converted, OUTPUT_PATH)
 
-    print(f"\nSaved: {OUTPUT_PATH}")
+    print("\n" + "=" * 70)
+    print(f"Sampled documents: {len(rows)}")
+    print(f"Converted documents: {len(converted)}")
+    print(f"Templates: {len(by_template)}")
+    print(f"Saved: {OUTPUT_PATH}")
+    print("=" * 70)
 
 
 if __name__ == "__main__":
