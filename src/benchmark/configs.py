@@ -67,9 +67,8 @@ CONFIGS: dict[str, ModelConfig] = {
     ),
     "nuextract3": ModelConfig(
         key="nuextract3",
-        model_id="numind/NuExtract3",  # confirm exact repo id/size variant before running
+        model_id="numind/NuExtract3",  # confirmed: real repo, 4B params, base (non-quantized)
         family="nuextract",
-        dtype="float16", # remove for H100 inference
         max_model_len=8192,
         gpu_memory_utilization=0.90,
         batch_size=100,
@@ -96,7 +95,6 @@ def build_llm_kwargs(cfg: ModelConfig) -> dict:
         limit_mm_per_prompt={"image": 1},
         max_model_len=cfg.max_model_len,
         gpu_memory_utilization=cfg.gpu_memory_utilization,
-        enforce_eager=True,
         structured_outputs_config={"backend": cfg.guided_decoding_backend},
         enable_prefix_caching=True,
         mm_processor_kwargs={"min_pixels": cfg.min_pixels, "max_pixels": cfg.max_pixels},
