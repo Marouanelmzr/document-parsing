@@ -1,0 +1,6 @@
+outs:
+- md5: ab69984e1f6937b0f1c1f9cfa7dbf558.dir
+  size: 11500428
+  nfiles: 1605
+  hash: md5
+  path: benchmark_results
