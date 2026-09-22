@@ -31,9 +31,12 @@ class ModelConfig:
     model_id: str
     family: Literal["vision_chat", "nuextract"]
     dtype: str = "bfloat16"          # compute dtype; FP8 weights are auto-detected from the checkpoint
-    max_model_len: int = 8192
-    gpu_memory_utilization: float = 0.90
-    batch_size: int = 400            # python-side chunking only, not the real vLLM inference batch
+    max_model_len: int = 4096 # 8192
+    gpu_memory_utilization: float = 0.95 # 0.9
+    max_num_seqs: int = 128
+    max_num_batched_tokens: int = 16384
+    max_num_scheduled_tokens: int = 16384
+    batch_size: int = 400  
     min_pixels: int = 256 * PATCH_PIXELS
     max_pixels: int = 2048 * PATCH_PIXELS
     max_new_tokens: int = 1500
@@ -48,15 +51,18 @@ CONFIGS: dict[str, ModelConfig] = {
         key="qwen32b",
         model_id="Qwen/Qwen3-VL-32B-Instruct-FP8",
         family="vision_chat",
-        max_model_len=8192,
-        gpu_memory_utilization=0.90,   # alone on the card -- give it almost all of it
+        max_model_len=4096,
+        gpu_memory_utilization=0.95,   # alone on the card -- give it almost all of it
+        max_num_seqs=128,
+        max_num_batched_tokens=16384,
+        max_num_scheduled_tokens=16384,
         batch_size=400,                # 400 images fit fine as PIL objects in one go
     ),
     "mistral24b": ModelConfig(
         key="mistral24b",
         model_id="RedHatAI/Mistral-Small-3.2-24B-Instruct-2506-FP8",
         family="vision_chat",
-        max_model_len=8192,
+        max_model_len=4096,
         gpu_memory_utilization=0.90,
         batch_size=400,
         extra_llm_kwargs={
@@ -69,7 +75,7 @@ CONFIGS: dict[str, ModelConfig] = {
         key="nuextract3",
         model_id="numind/NuExtract3",  # confirmed: real repo, 4B params, base (non-quantized)
         family="nuextract",
-        max_model_len=8192,
+        max_model_len=4096,
         gpu_memory_utilization=0.90,
         batch_size=100,
         extra_llm_kwargs={"trust_remote_code": True},
@@ -79,7 +85,7 @@ CONFIGS: dict[str, ModelConfig] = {
         model_id="cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit",
         family="vision_chat",
         dtype="float16",
-        max_model_len=8192,
+        max_model_len=4096,
         gpu_memory_utilization=0.90,
         batch_size=100,
         max_new_tokens=1000,
@@ -95,6 +101,9 @@ def build_llm_kwargs(cfg: ModelConfig) -> dict:
         limit_mm_per_prompt={"image": 1},
         max_model_len=cfg.max_model_len,
         gpu_memory_utilization=cfg.gpu_memory_utilization,
+        max_num_seqs=cfg.max_num_seqs,
+        max_num_batched_tokens=cfg.max_num_batched_tokens,
+        max_num_scheduled_tokens=cfg.max_num_scheduled_tokens,
         structured_outputs_config={"backend": cfg.guided_decoding_backend},
         enable_prefix_caching=True,
         mm_processor_kwargs={"min_pixels": cfg.min_pixels, "max_pixels": cfg.max_pixels},
