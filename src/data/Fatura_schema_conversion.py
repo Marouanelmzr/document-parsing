@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+
 import re
+
 from pathlib import Path
+
 from typing import Any
 
 
@@ -16,6 +19,7 @@ DIRECT_FIELD_MAP = {
     "DATE": "date",
     "DUE_DATE": "due_date",
 }
+
 NUMERIC_FIELD_MAP = {
     "SUB_TOTAL": "total_net",
     "SUBTOTAL": "total_net",
@@ -23,6 +27,7 @@ NUMERIC_FIELD_MAP = {
     "TOTAL TAX": "total_tax",
     "TOTAL": "total_amount",
 }
+
 ADDRESS_KEYS = [
     "address",
     "street_number",
@@ -36,10 +41,10 @@ ADDRESS_KEYS = [
 ]
 
 
-
 # ============================================================
 # Generic helpers
 # ============================================================
+
 def clean_text(text: Any) -> str:
     """Normalize whitespace while preserving meaningful punctuation."""
     if text is None:
@@ -52,7 +57,6 @@ def clean_text(text: Any) -> str:
         if line:
             lines.append(line)
     return "\n".join(lines).strip()
-
 
 
 def get_text(value: Any) -> str | None:
@@ -75,7 +79,6 @@ def get_text(value: Any) -> str | None:
     return None
 
 
-
 def get_first_text(
     annotation: dict[str, Any],
     *field_names: str,
@@ -86,7 +89,6 @@ def get_first_text(
         if text:
             return text
     return None
-
 
 
 def parse_float(value: Any) -> float | None:
@@ -119,14 +121,15 @@ def parse_float(value: Any) -> float | None:
         return None
 
 
-
 # ============================================================
 # Date parsing
 # ============================================================
+
 def parse_date_text(text: str | None) -> str | None:
     """
     Extract the invoice date while preserving the original
     formatting.
+
     Example:
         Invoice Date: 11-May-2013
         -> 11-May-2013
@@ -144,11 +147,11 @@ def parse_date_text(text: str | None) -> str | None:
     return text.strip()
 
 
-
 def parse_due_date_text(text: str | None) -> str | None:
     """
     Extract the due date while preserving the original
     formatting.
+
     Example:
         Due Date : 21-May-2016
         -> 21-May-2016
@@ -166,15 +169,16 @@ def parse_due_date_text(text: str | None) -> str | None:
     return text.strip()
 
 
-
 # ============================================================
 # Invoice number
 # ============================================================
+
 def parse_invoice_number_text(
     text: str | None,
 ) -> str | None:
     """
     Extract invoice number from fields such as:
+
         Invoice Number: 123
         Invoice No: 123
         Invoice #: 123
@@ -198,17 +202,16 @@ def parse_invoice_number_text(
     return text.strip() or None
 
 
-
 # ============================================================
 # Address parsing
 # ============================================================
+
 def empty_address() -> dict[str, Any]:
     """Return the complete target address schema with null values."""
     return {
         key: None
         for key in ADDRESS_KEYS
     }
-
 
 
 def normalize_address_schema(
@@ -226,17 +229,19 @@ def normalize_address_schema(
     }
 
 
-
 def extract_address_complement(
     street: str,
 ) -> tuple[str, str | None]:
     """
     Extract common address complements from a street string.
+
     Examples:
         "Woods Drive Apt. 239"
             -> ("Woods Drive", "Apt. 239")
+
         "Michelle Mall Suite 662"
             -> ("Michelle Mall", "Suite 662")
+
         "Dunn Ferry Apt. 021"
             -> ("Dunn Ferry", "Apt. 021")
     """
@@ -263,7 +268,6 @@ def extract_address_complement(
     complement = match.group(1).strip()
     street_without_complement = street[:match.start()].strip()
     return street_without_complement, complement
-
 
 
 def parse_address_text(
@@ -408,30 +412,44 @@ def parse_address_text(
     return normalize_address_schema(address)
 
 
-
 # ============================================================
 # Customer / supplier extraction
 # ============================================================
+
+
 def parse_buyer_text(
     text: str | None,
-) -> tuple[str | None, dict[str, Any] | None]:
+) -> tuple[str | None, dict[str, Any] | None, str | None]:
     """
     Parse BUYER field.
+
     Handles both:
-        Buyer :Angela Wilson
+        Buyer:Angela Wilson
+
     and:
         Bill to:Crystal Beck
+
+    Also extracts customer phone numbers from lines such as:
+        Tel: +1 555 123 4567
+        Phone: +1 555 123 4567
+        Telephone: +1 555 123 4567
+        Mobile: +1 555 123 4567
+        Phone Number: +1 555 123 4567
     """
     if not text:
-        return None, None
+        return None, None, None
+
     text = clean_text(text)
+
     lines = [
         line.strip()
         for line in text.split("\n")
         if line.strip()
     ]
+
     if not lines:
-        return None, None
+        return None, None, None
+
     # --------------------------------------------------------
     # Customer name
     # --------------------------------------------------------
@@ -446,13 +464,19 @@ def parse_buyer_text(
     )
 
     bill_to_inline_match = re.search(
-        r"\bBill\s*[_ ]?\s*to\s*:\s*(.+)$",
+        r"\bBill\s*[\-_ ]?\s*to\s*:\s*(.+)$",
         first_line,
         flags=re.IGNORECASE,
     )
 
     bill_to_label_match = re.fullmatch(
-        r"Bill\s*[_ ]?\s*to\s*:?",
+        r"Bill\s*[\-_ ]?\s*to\s*:?",
+        first_line,
+        flags=re.IGNORECASE,
+    )
+
+    ship_to_label_match = re.fullmatch(
+        r"Ship\s*[\-_ ]?\s*to\s*:?",
         first_line,
         flags=re.IGNORECASE,
     )
@@ -470,16 +494,47 @@ def parse_buyer_text(
         else:
             customer_name = None
 
+    elif ship_to_label_match:
+        if len(lines) > 1:
+            customer_name = lines[1].strip()
+            address_start = 2
+        else:
+            customer_name = None
+
     else:
         customer_name = first_line.strip()
+
+    # --------------------------------------------------------
+    # Customer phone
+    # --------------------------------------------------------
+
+    customer_phone_number = None
+
+    phone_pattern = re.compile(
+        r"^(?:Tel|Telephone|Phone|Phone\s*Number|Mobile|Mobile\s*Number)"
+        r"\s*:\s*(.+)$",
+        flags=re.IGNORECASE,
+    )
+
     # --------------------------------------------------------
     # Address lines
     # --------------------------------------------------------
+
     address_lines = []
 
     for line in lines[address_start:]:
+
+        phone_match = phone_pattern.match(line)
+
+        if phone_match:
+            if customer_phone_number is None:
+                customer_phone_number = (
+                    phone_match.group(1).strip()
+                )
+            continue
+
         if re.match(
-            r"^(?:Tel|Phone|Email|Site|Website)\s*:",
+            r"^(?:Email|Site|Website)\s*:",
             line,
             flags=re.IGNORECASE,
         ):
@@ -493,16 +548,23 @@ def parse_buyer_text(
             continue
 
         address_lines.append(line)
+
+    # --------------------------------------------------------
+    # Customer address
+    # --------------------------------------------------------
+
     customer_address = None
+
     if address_lines:
         customer_address = parse_address_text(
             "\n".join(address_lines)
         )
+
     return (
         customer_name or None,
         customer_address,
+        customer_phone_number,
     )
-
 
 
 def parse_seller_address_text(
@@ -512,15 +574,16 @@ def parse_seller_address_text(
     return parse_address_text(text)
 
 
-
 # ============================================================
 # Numeric fields
 # ============================================================
+
 def extract_numeric_field(
     text: str | None,
 ) -> float | None:
     """
     Extract a numeric amount from a simple FATURA numeric field.
+
     Example:
         SUB_TOTAL : 311.26 USD
         -> 311.26
@@ -537,44 +600,52 @@ def extract_numeric_field(
     return parse_float(matches[0])
 
 
-
 def extract_tax_rate(
     text: str | None,
 ) -> float | None:
     """
-    Extract tax rate.
+    Extract tax rate as a decimal fraction.
+
     Example:
-        TAX:VAT (4.18%): 13.03 USD
-        -> 4.18
+        TAX:VAT (6.4%): 13.03 USD
+        -> 0.064
     """
     if not text:
         return None
+
     text = clean_text(text)
+
     match = re.search(
         r"\(\s*"
         r"([-+]?\d[\d,]*(?:[.,]\d+)?)"
         r"\s*%\s*\)",
         text,
     )
+
     if match:
-        return parse_float(match.group(1))
+        rate = parse_float(match.group(1))
+        return rate / 100 if rate is not None else None
+
     match = re.search(
         r"([-+]?\d[\d,]*(?:[.,]\d+)?)\s*%",
         text,
     )
+
     if match:
-        return parse_float(match.group(1))
+        rate = parse_float(match.group(1))
+        return rate / 100 if rate is not None else None
+
     return None
-
-
 
 def extract_tax_amount(
     text: str | None,
 ) -> float | None:
     """
     Extract tax amount.
+
     Example:
         TAX:VAT (4.18%): 13.03 USD
+
     returns:
         13.03
     """
@@ -606,6 +677,7 @@ def extract_tax_amount(
 # ============================================================
 # GST tax extraction
 # ============================================================
+
 def extract_gst_tax(
     text: str | None,
 ) -> dict[str, float] | None:
@@ -613,8 +685,8 @@ def extract_gst_tax(
     Extract GST rate and amount.
 
     Example:
-        GST(1%) : 6.98
-        -> {"rate": 1.0, "amount": 6.98}
+        GST(6.4%) : 13.03
+        -> {"rate": 0.064, "amount": 13.03}
     """
     if not text:
         return None
@@ -640,20 +712,62 @@ def extract_gst_tax(
         return None
 
     return {
-        "rate": rate,
+        "rate": rate / 100,
         "amount": amount,
     }
 
+# ============================================================
+# Discount extraction
+# ============================================================ 
 
+def extract_discount(
+    text: str | None,
+) -> dict[str, float] | None:
+    """
+    Extract discount rate and amount.
 
+    Example:
+        DISCOUNT(1.85%): (-) 13.42
+        -> {"rate": 0.0185, "amount": 13.42}
+    """
+    if not text:
+        return None
+
+    text = clean_text(text)
+
+    match = re.search(
+        r"DISCOUNT\s*\(\s*"
+        r"([-+]?\d[\d,]*(?:[.,]\d+)?)"
+        r"\s*%\s*\)\s*:\s*"
+        r"(?:\(\s*-\s*\)\s*)?"
+        r"([-+]?\d[\d,]*(?:[.,]\d+)?)",
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    if not match:
+        return None
+
+    rate = parse_float(match.group(1))
+    amount = parse_float(match.group(2))
+
+    if rate is None or amount is None:
+        return None
+
+    return {
+        "rate": rate / 100,
+        "amount": amount,
+    }
 # ============================================================
 # Currency / locale
 # ============================================================
+
 def extract_currency(
     *texts: str | None,
 ) -> str | None:
     """
     Extract a valid ISO-style currency code.
+
     We only accept known currency codes, so values such as
     'VAT' are never interpreted as currencies.
     """
@@ -697,7 +811,6 @@ def extract_currency(
     return None
 
 
-
 def infer_country(
     customer_address: dict[str, Any] | None,
     supplier_address: dict[str, Any] | None,
@@ -714,10 +827,10 @@ def infer_country(
     return None
 
 
-
 # ============================================================
 # Document type
 # ============================================================
+
 def infer_document_type(
     annotation: dict[str, Any],
 ) -> str | None:
@@ -726,6 +839,7 @@ def infer_document_type(
     Important:
         COMMERCIAL INVOICE
             -> invoice
+
     'invoice' is checked before 'commercial'.
     """
     title = get_first_text(
@@ -746,7 +860,6 @@ def infer_document_type(
     if "commercial" in text:
         return "commercial"
     return None
-
 
 
 # ============================================================
@@ -857,6 +970,7 @@ def convert_fatura_annotation(
         "supplier_phone_number": None,
         "supplier_address": empty_address(),
         "customer_name": None,
+        "customer_phone_number": None,
         "customer_address": empty_address(),
         "invoice_number": None,
         "document_type": None,
@@ -872,6 +986,7 @@ def convert_fatura_annotation(
         "total_tax": None,
         "total_amount": None,
         "taxes": [],
+        "discount": None,
         "line_items": [],
     }
     # ========================================================
@@ -922,6 +1037,16 @@ def convert_fatura_annotation(
     # ========================================================
     # Customer / buyer
     # ========================================================
+    # Priority:
+    #
+    # 1. BUYER
+    # 2. BILL_TO
+    # 3. SEND_TO / SHIP_TO only when no buyer is available
+    #
+    # SEND_TO / SHIP_TO is used as a customer fallback because
+    # some FATURA templates provide shipping information instead
+    # of a BUYER/BILL_TO field.
+    # ========================================================
     buyer_text = get_first_text(
         annotation,
         "BUYER",
@@ -931,6 +1056,7 @@ def convert_fatura_annotation(
         (
             customer_name,
             customer_address,
+            customer_phone_number,
         ) = parse_buyer_text(
             buyer_text
         )
@@ -938,12 +1064,52 @@ def convert_fatura_annotation(
             fields["customer_name"] = (
                 customer_name
             )
+
         if customer_address:
             fields["customer_address"] = (
                 normalize_address_schema(
                     customer_address
                 )
             )
+        if customer_phone_number:
+            fields["customer_phone_number"] = (
+                customer_phone_number
+            )
+
+    else:
+        # No BUYER/BILL_TO available.
+        # Fall back to SEND_TO / SHIP_TO.
+        ship_to_text = get_first_text(
+            annotation,
+            "SEND_TO",
+            "SHIP_TO",
+        )
+
+        if ship_to_text:
+            (
+                customer_name,
+                customer_address,
+                customer_phone_number,
+            ) = parse_buyer_text(
+                ship_to_text
+            )
+
+            if customer_name:
+                fields["customer_name"] = (
+                    customer_name
+                )
+
+            if customer_address:
+                fields["customer_address"] = (
+                    normalize_address_schema(
+                        customer_address
+                    )
+                )
+
+            if customer_phone_number:
+                fields["customer_phone_number"] = (
+                    customer_phone_number
+                )
     # ========================================================
     # Invoice number
     # ========================================================
@@ -1065,6 +1231,28 @@ def convert_fatura_annotation(
                 tax_text
             )
         )
+
+    # ========================================================
+    # Discount
+    #
+    # Example:
+    #
+    # DISCOUNT(1.85%): (-) 13.42
+    #
+    # rate   = 0.0185
+    # amount = 13.42
+    # ========================================================
+    discount_text = get_first_text(
+        annotation,
+        "DISCOUNT",
+    )
+
+    if discount_text:
+        discount = extract_discount(
+            discount_text
+        )
+        if discount is not None:
+            fields["discount"] = discount
     # ========================================================
     # Locale
     # ========================================================
@@ -1103,26 +1291,20 @@ def convert_fatura_annotation(
                     "amount": fields["total_tax"],
                 }
             ]
-
     # ========================================================
     # GST taxes
     # ========================================================
     for field_name, value in annotation.items():
         if not field_name.upper().startswith("GST("):
             continue
-
         gst_text = get_text(value)
-
         if not gst_text:
             continue
-
         gst_tax = extract_gst_tax(
             gst_text
         )
-
         if gst_tax is None:
             continue
-
         fields["taxes"].append(
             {
                 "rate": gst_tax["rate"],
@@ -1130,7 +1312,6 @@ def convert_fatura_annotation(
                 "amount": gst_tax["amount"],
             }
         )
-
     # ========================================================
     # Line items
     # ========================================================
@@ -1145,10 +1326,10 @@ def convert_fatura_annotation(
     }
 
 
-
 # ============================================================
 # Dataset conversion
 # ============================================================
+
 def convert_dataset(
     annotations: dict[str, dict[str, Any]],
     template_patterns: dict[str, Any] | None = None,
@@ -1156,6 +1337,7 @@ def convert_dataset(
 ) -> dict[str, Any]:
     """
     Convert an entire FATURA dataset.
+
     Parameters
     ----------
     annotations:
