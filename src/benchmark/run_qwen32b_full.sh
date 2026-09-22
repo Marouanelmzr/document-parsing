@@ -253,7 +253,7 @@ if [[ " ${FAILED_MODELS[*]-} " == *" qwen32b "* ]]; then
     echo "WARNING: qwen32b failed in step 5 -- skipping reconciliation, "
     echo "there is nothing to reconcile."
 else
-    python src/benchmark/reconcile.py \
+    python src/benchmark/Reconcile.py \
         --predictions-dir "$OUT_ROOT/qwen32b" \
         --ground-truth-dir "$GT_EVAL_DIR" \
         --output-dir "$OUT_ROOT/qwen32b_final"

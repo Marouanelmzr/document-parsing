@@ -37,6 +37,10 @@ class Tax(BaseModel):
     base: Optional[float] = None
     amount: Optional[float] = None
 
+class Discount(BaseModel): 
+    rate: Optional[float] = None
+    amount: Optional[float] = None
+
 
 class LineItem(BaseModel):
     description: Optional[str] = None
@@ -53,6 +57,7 @@ class InvoiceFields(BaseModel):
     supplier_phone_number: Optional[str] = None
     supplier_address: Optional[Address] = None
     customer_name: Optional[str] = None
+    customer_phone_number: Optional[str] = None
     customer_address: Optional[Address] = None
     invoice_number: Optional[str] = None
     document_type: Optional[Literal["invoice", "tax_invoice"]] = None
@@ -64,6 +69,7 @@ class InvoiceFields(BaseModel):
     total_tax: Optional[float] = None
     total_amount: Optional[float] = None
     taxes: List[Tax] = []
+    discount: Optional[Discount] = None
     line_items: List[LineItem] = []
 
 

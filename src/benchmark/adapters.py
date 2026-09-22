@@ -50,12 +50,18 @@ type LineItem = {
   unit_measure: string | null;
 };
 
+type Discount = {
+  rate: number | null;   // decimal, e.g. 0.0185
+  amount: number | null;
+};
+
 type Invoice = {
   fields: {
     supplier_name: string | null;
     supplier_phone_number: string | null;
     supplier_address: Address | null;
     customer_name: string | null;
+    customer_phone_number: string | null;
     customer_address: Address | null;
     invoice_number: string | null;
     document_type: "invoice" | "tax_invoice" | null;
@@ -67,6 +73,7 @@ type Invoice = {
     total_tax: number | null;
     total_amount: number | null; // final total the customer owes
     taxes: Tax[];
+    discount: Discount | null;
     line_items: LineItem[];
   };
 };"""
@@ -93,6 +100,7 @@ CRITICAL RULES:
    - period = the timeframe the invoiced work covers (not issue date, not deadline). Keywords: "Période", "Prestations du", "Mois de", "Billing period". Often a month or date range; null if the invoice is a one-off with no stated period.
 
 6. document_type must be exactly one of: invoice, tax_invoice.
+7. NEVER CALCULATE, ONLY TRANSCRIBE: total_net, total_tax, total_amount, and discount.amount/discount.rate must each be copied from a number that is explicitly printed on the invoice under that meaning. Do not derive any of them by summing line items, subtracting a discount, multiplying a rate by a base, or any other arithmetic -- even if the computed value would be "more correct" than what's printed. If a given total or the discount isn't printed anywhere on the document, its value is null.
 """
 
 
