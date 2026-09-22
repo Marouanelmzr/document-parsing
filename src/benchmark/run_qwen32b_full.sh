@@ -83,6 +83,11 @@ fi
 
 source .venv/bin/activate
 
+# H100 environment has CUDA 12.8 nvcc.
+# vLLM 0.30.0 DeepGEMM requires nvcc >= 12.9.
+export VLLM_USE_DEEP_GEMM=0
+export VLLM_MOE_USE_DEEP_GEMM=0
+
 python -m pip install --upgrade pip
 
 
