@@ -1,6 +1,5 @@
 .venv/
 .env
 __pycache__/
-/data
 /benchmark_results
 /benchmark_results_full

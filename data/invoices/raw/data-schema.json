@@ -1,0 +1,514 @@
+{
+  "fields": [
+    {
+      "title": "Supplier Name",
+      "name": "supplier_name",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The name of the supplier of the invoice.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "string",
+      "nested_fields": []
+    },
+    {
+      "title": "Supplier Phone Number",
+      "name": "supplier_phone_number",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The phone number of the supplier of the invoice.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "string",
+      "nested_fields": []
+    },
+    {
+      "title": "Supplier Address",
+      "name": "supplier_address",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The full address of the supplier and the breakdown of the address in components.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "nested_object",
+      "nested_fields": [
+        {
+          "title": "Address",
+          "name": "address",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The full supplier address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Street number",
+          "name": "street_number",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The street number of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Street Name",
+          "name": "street_name",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The street name of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "PO Box",
+          "name": "po_box",
+          "is_array": false,
+          "unique_values": false,
+          "description": "PO Box number, if there is one in the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Address Complement",
+          "name": "address_complement",
+          "is_array": false,
+          "unique_values": false,
+          "description": "Address complement: floor, building, suite, ...",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "City",
+          "name": "city",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The city of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Postal Code",
+          "name": "postal_code",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The postal code of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "State",
+          "name": "state",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The state / region / land of the address, if there is any.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Country",
+          "name": "country",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The country of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "title": "Invoice Number",
+      "name": "invoice_number",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The number of the invoice.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "string",
+      "nested_fields": []
+    },
+    {
+      "title": "Date",
+      "name": "date",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The date the invoice was officially issued or created.",
+      "guidelines": "Target Keywords: \"Date\", \"Date de facture\", \"Facturé le\", \"Invoice date\", \"Date of issue\".\nExclusion: Do NOT extract the payment deadline (\"Échéance\", \"Due date\"). If there are multiple dates, this is usually the earlier date, often located at the top of the document near the Invoice Number.",
+      "classification_values": [],
+      "type": "date",
+      "nested_fields": []
+    },
+    {
+      "title": "Total Amount",
+      "name": "total_amount",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The final total amount paid, including all taxes and discounts.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "number",
+      "nested_fields": []
+    },
+    {
+      "title": "Total Net",
+      "name": "total_net",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The total amount before taxes.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "number",
+      "nested_fields": []
+    },
+    {
+      "title": "Total Tax",
+      "name": "total_tax",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The total amount of all taxes.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "number",
+      "nested_fields": []
+    },
+    {
+      "title": "Taxes",
+      "name": "taxes",
+      "is_array": true,
+      "unique_values": false,
+      "description": "A list of individual taxes applied, each including rate, base and amount.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "nested_object",
+      "nested_fields": [
+        {
+          "title": "Rate",
+          "name": "rate",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The tax rate of this tax as a decimal.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        },
+        {
+          "title": "Base",
+          "name": "base",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The base amount on which this tax is computed.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        },
+        {
+          "title": "Amount",
+          "name": "amount",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The computed tax amount for this tax.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "title": "Line Items",
+      "name": "line_items",
+      "is_array": true,
+      "unique_values": false,
+      "description": "A list of line items in the invoice.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "nested_object",
+      "nested_fields": [
+        {
+          "title": "Description",
+          "name": "description",
+          "is_array": false,
+          "unique_values": false,
+          "description": "A description of the item or service.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Quantity",
+          "name": "quantity",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The quantity of the item or service.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        },
+        {
+          "title": "Unit Price",
+          "name": "unit_price",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The price per unit of the item or service.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        },
+        {
+          "title": "Total Price",
+          "name": "total_price",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The total price for the line item: quantity * unit price.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        },
+        {
+          "title": "Product Code",
+          "name": "product_code",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The product code of the item.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Tax Amount",
+          "name": "tax_amount",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The tax amount of the item.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        },
+        {
+          "title": "Tax Rate",
+          "name": "tax_rate",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The tax rate of the item.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "number"
+        },
+        {
+          "title": "Unit Measure",
+          "name": "unit_measure",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The unit of measure of the item.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "title": "Document Type",
+      "name": "document_type",
+      "is_array": false,
+      "unique_values": false,
+      "description": "Document type of the financial document.",
+      "guidelines": "",
+      "classification_values": [
+        "invoice",
+        "payslip",
+        "quote",
+        "purchase_order",
+        "statement",
+        "receipt",
+        "credit_note",
+        "other_financial"
+      ],
+      "type": "classification",
+      "nested_fields": []
+    },
+    {
+      "title": "Locale",
+      "name": "locale",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The locale contains the language, country and currency of the invoice.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "nested_object",
+      "nested_fields": [
+        {
+          "title": "Language",
+          "name": "language",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The language of the invoice, ISO 639-1 language code.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Country",
+          "name": "country",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The country of the invoice, ISO 3166-1 alpha-2.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Currency",
+          "name": "currency",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The currency in which is issued the invoice, ISO 4217.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "title": "Customer Name",
+      "name": "customer_name",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The name of the customer of the invoice.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "string",
+      "nested_fields": []
+    },
+    {
+      "title": "Customer Address",
+      "name": "customer_address",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The full address of the customer and the breakdown of the address in components.",
+      "guidelines": "",
+      "classification_values": [],
+      "type": "nested_object",
+      "nested_fields": [
+        {
+          "title": "Address",
+          "name": "address",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The full customer address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Street number",
+          "name": "street_number",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The street number of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Street Name",
+          "name": "street_name",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The street name of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "PO Box",
+          "name": "po_box",
+          "is_array": false,
+          "unique_values": false,
+          "description": "PO Box number, if there is one in the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Address Complement",
+          "name": "address_complement",
+          "is_array": false,
+          "unique_values": false,
+          "description": "Address complement: floor, building, suite, ...",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "City",
+          "name": "city",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The city of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Postal Code",
+          "name": "postal_code",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The postal code of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "State",
+          "name": "state",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The state / region / land of the address, if there is any.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        },
+        {
+          "title": "Country",
+          "name": "country",
+          "is_array": false,
+          "unique_values": false,
+          "description": "The country of the address.",
+          "guidelines": "",
+          "classification_values": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "title": "Period",
+      "name": "period",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The date or timeframe that the invoiced services cover.",
+      "guidelines": "Target Keywords: \"Période\", \"Prestations du\", \"Mois de\", \"Billing period\".\nExclusion: This refers to when the work was done, NOT when the invoice was created and NOT when the payment is due. It is often written as a month (e.g., \"Juin 2026\") or a date range.",
+      "classification_values": [],
+      "type": "date",
+      "nested_fields": []
+    },
+    {
+      "title": "Due Date",
+      "name": "due_date",
+      "is_array": false,
+      "unique_values": false,
+      "description": "The deadline date by which the client must pay the total invoice amount.",
+      "guidelines": "Target Keywords (FR): Look specifically for \"Échéance\", \"Date d'échéance\", \"À payer avant le\", \"Payable au\", \"Date limite de paiement\", or \"Valable jusqu'au\".\nTarget Keywords (EN): Look for \"Due date\", \"Payment due\", \"Payable by\", or \"Deadline\".\nExclusion: Do NOT extract the invoice issue date (\"Date de facture\") or the service period (\"Période\").\nLogical Rule: The due date is almost always equal to or later than the invoice issue date. If you see two dates, the later date is typically the due date.",
+      "classification_values": [],
+      "type": "date",
+      "nested_fields": []
+    }
+  ]
+}
