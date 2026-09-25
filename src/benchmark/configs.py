@@ -84,12 +84,25 @@ CONFIGS: dict[str, ModelConfig] = {
         key="qwen8b_t4",
         model_id="cyankiwi/Qwen3-VL-8B-Instruct-AWQ-4bit",
         family="vision_chat",
-        dtype="float16",
+        dtype="float16", # For colab T4
         max_model_len=4096,
-        gpu_memory_utilization=0.90,
         batch_size=100,
         max_new_tokens=1000,
         extra_llm_kwargs={},
+    ),
+    "qwen2b": ModelConfig(
+        key="qwen2b",
+        model_id="Qwen/Qwen3-VL-2B-Instruct",
+        family="vision_chat",
+        dtype="float16", # For colab T4
+        # everything else (max_model_len, gpu_memory_utilization, batch_size, ...) 
+        # is fine at the dataclass defaults -- same as qwen32b used
+    ),
+    "qwen4b": ModelConfig(
+        key="qwen4b",
+        model_id="Qwen/Qwen3-VL-4B-Instruct",
+        family="vision_chat",
+        dtype="float16", # For colab T4
     ),
 }
 
