@@ -114,7 +114,7 @@ python -m pip install -r requirements.txt
 echo ""
 echo "[2/6] Pulling dataset with DVC..."
 
-dvc pull
+dvc pull data/invoices/processed
 
 
 # ============================================================
