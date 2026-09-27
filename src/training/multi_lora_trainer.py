@@ -47,7 +47,7 @@ from peft import LoraConfig, get_peft_model, get_peft_model_state_dict
 from torch.optim import AdamW
 from transformers import get_cosine_schedule_with_warmup
 
-from lora_trials import TrialConfig
+from src.training.lora_trials import TrialConfig
 from src.training.metrics import field_accuracy, safe_parse
 
 
