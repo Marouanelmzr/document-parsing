@@ -192,7 +192,7 @@ fi
 
 START_EPOCH=$(date +%s)
 
-python src/training/train.py "${TRAIN_ARGS[@]}" "${WANDB_ARGS[@]}"
+python -m src.training.train "${TRAIN_ARGS[@]}" "${WANDB_ARGS[@]}"
 
 END_EPOCH=$(date +%s)
 ELAPSED_SEC=$((END_EPOCH - START_EPOCH))
