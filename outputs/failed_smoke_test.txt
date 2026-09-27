@@ -1,0 +1,972 @@
+Collecting scmrepo<4,>=3.5.2 (from dvc>=3.0->-r requirements.txt (line 15))  Using cached scmrepo-3.6.2-py3-none-any.whl.metadata (4.8 kB)Collecting shortuuid>=0.5 (from dvc>=3.0->-r requirements.txt (line 15))  Using cached shortuuid-1.0.13-py3-none-any.whl.metadata (5.8 kB)Collecting shtab<2,>=1.3.4 (from dvc>=3.0->-r requirements.txt (line 15))  Using cached shtab-1.12.1-py3-none-any.whl.metadata (7.6 kB)Collecting tomlkit>=0.11.1 (from dvc>=3.0->-r requirements.txt (line 15))  Using cached tomlkit-0.15.1-py3-none-any.whl.metadata (3.3 kB)
+Collecting voluptuous>=0.11.7 (from dvc>=3.0->-r requirements.txt (line 15))
+  Using cached voluptuous-0.16.0-py3-none-any.whl.metadata (20 kB)
+Collecting zc.lockfile>=1.2.1 (from dvc>=3.0->-r requirements.txt (line 15))
+  Using cached zc_lockfile-4.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting dictdiffer>=0.8.1 (from dvc-data<3.19.0,>=3.18.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached dictdiffer-0.10.0-py3-none-any.whl.metadata (2.9 kB)
+Collecting diskcache>=5.2.1 (from dvc-data<3.19.0,>=3.18.2->dvc>=3.0->-r requirements.txt (line 15))  Using cached diskcache-5.6.3-py3-none-any.whl.metadata (20 kB)
+Collecting sqltrie<1,>=0.11.0 (from dvc-data<3.19.0,>=3.18.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached sqltrie-0.11.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting orjson<4,>=3 (from dvc-data<3.19.0,>=3.18.2->dvc>=3.0->-r requirements.txt (line 15))  Using cached orjson-3.12.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
+Collecting billiard<5.0,>=4.2.1 (from celery->dvc>=3.0->-r requirements.txt (line 15))  Using cached billiard-4.3.0-py3-none-any.whl.metadata (5.0 kB)Collecting vine<6.0,>=5.1.0 (from celery->dvc>=3.0->-r requirements.txt (line 15))  Using cached vine-5.1.0-py3-none-any.whl.metadata (2.7 kB)
+Collecting click-didyoumean>=0.3.0 (from celery->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached click_didyoumean-0.3.1-py3-none-any.whl.metadata (3.9 kB)Collecting click-repl>=0.2.0 (from celery->dvc>=3.0->-r requirements.txt (line 15))  Using cached click_repl-0.4.0-py3-none-any.whl.metadata (3.7 kB)Collecting click-plugins>=1.1.1 (from celery->dvc>=3.0->-r requirements.txt (line 15))  Using cached click_plugins-1.1.1.2-py2.py3-none-any.whl.metadata (6.5 kB)Collecting python-dateutil>=2.8.2 (from celery->dvc>=3.0->-r requirements.txt (line 15))  Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)Collecting tzlocal (from celery->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached tzlocal-5.4.4-py3-none-any.whl.metadata (7.7 kB)Collecting atpublic (from flufl.lock<10,>=8.1.0->dvc>=3.0->-r requirements.txt (line 15))  Using cached atpublic-8.0.1-py3-none-any.whl.metadata (2.6 kB)Collecting entrypoints (from gto<2,>=1.6.0->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached entrypoints-0.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting semver>=2.13.0 (from gto<2,>=1.6.0->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached semver-3.1.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting amqp<6.0.0,>=5.1.1 (from kombu->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached amqp-5.4.0-py3-none-any.whl.metadata (9.4 kB)
+Collecting tzdata>=2025.2 (from kombu->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached tzdata-2026.4-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting gitpython>3 (from scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached gitpython-3.1.62-py3-none-any.whl.metadata (13 kB)
+Collecting pygit2>=1.14.0 (from scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached pygit2-1.20.1-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (3.7 kB)
+Collecting asyncssh<3,>=2.13.1 (from scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached asyncssh-2.24.0-py3-none-any.whl.metadata (9.8 kB)
+Collecting aiohttp-retry>=2.5.0 (from scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached aiohttp_retry-2.9.1-py3-none-any.whl.metadata (8.8 kB)
+Collecting cryptography>=48.0.1 (from asyncssh<3,>=2.13.1->scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached cryptography-50.0.1-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+Collecting urllib3>=2.2.2 (from dulwich->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pyarrow>=21.0.0 (from datasets>=3.0.0->-r requirements.txt (line 22))
+  Downloading pyarrow-25.0.1-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (3.0 kB)
+Collecting pandas (from datasets>=3.0.0->-r requirements.txt (line 22))
+  Downloading pandas-3.0.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (79 kB)
+Collecting xxhash (from datasets>=3.0.0->-r requirements.txt (line 22))
+  Downloading multiprocess-0.70.19-py312-none-any.whl.metadata (7.5 kB)
+Collecting aiohappyeyeballs>=2.5.0 (from aiohttp>=3.13.3->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting multidict<7.0,>=4.5 (from aiohttp>=3.13.3->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached propcache-0.5.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (25 kB)
+Collecting docstring-parser<1,>=0.15 (from anthropic>=0.71.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading jiter-0.17.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+Collecting sniffio<2,>=1 (from anthropic>=0.71.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+Collecting httpcore2==2.13.1 (from httpx2>=2.5.0->mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading httpcore2-2.13.1-py3-none-any.whl.metadata (26 kB)
+Collecting truststore>=0.10 (from httpx2>=2.5.0->mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading truststore-0.10.4-py3-none-any.whl.metadata (4.4 kB)
+Collecting prompt_toolkit>=3.0.36 (from click-repl>=0.2.0->celery->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached prompt_toolkit-3.0.53-py3-none-any.whl.metadata (6.4 kB)
+Collecting cffi>=2.0.0 (from cryptography>=48.0.1->asyncssh<3,>=2.13.1->scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography>=48.0.1->asyncssh<3,>=2.13.1->scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+Collecting cuda-core~=1.2.0 (from cuda-python>=12.0->flashinfer-python==0.6.18.post1->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading cuda_core-1.2.1-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.3 kB)
+Collecting dnspython>=2.0.0 (from email-validator>=2.0.0->fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting rich-toolkit>=0.14.8 (from fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "standard"->fastapi[standard]<0.137.0,>=0.133.0->v
+llm>=0.12.0->-r requirements.txt (line 2))
+  Downloading rich_toolkit-0.20.5-py3-none-any.whl.metadata (3.0 kB)
+Collecting fastapi-cloud-cli>=0.1.1 (from fastapi-cli[standard]>=0.0.8; extra == "standard"->fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r
+requirements.txt (line 2))
+  Downloading fastapi_cloud_cli-0.26.0-py3-none-any.whl.metadata (3.1 kB)
+Collecting rignore>=0.5.1 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.8; extra == "standard"->fastapi[standard]<0.137.0,>=0.133.0->v
+Collecting sentry-sdk>=2.20.0 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.8; extra == "standard"->fastapi[standard]<0.137.0,>=0.133.
+Collecting detect-installer>=0.1.0 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.8; extra == "standard"->fastapi[standard]<0.137.0,>=0
+Collecting agent-detector>=1.1.0 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.8; extra == "standard"->fastapi[standard]<0.137.0,>=0.1
+INFO: pip is looking at multiple versions of fsspec[tqdm] to determine which version is compatible with other requirements. This could take a while
+  Downloading fsspec-2026.7.0-py3-none-any.whl.metadata (10 kB)
+Collecting smmap<6,>=3.0.1 (from gitdb<5,>=4.0.1->gitpython>3->scmrepo<4,>=3.5.2->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached smmap-5.0.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting antlr4-python3-runtime==4.9.* (from hydra-core>=1.1->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached antlr4_python3_runtime-4.9.3-py3-none-any.whl
+Collecting appdirs (from iterative-telemetry>=0.0.7->dvc>=3.0->-r requirements.txt (line 15))
+  Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema>=4.23.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema>=4.23.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.25.0 (from jsonschema>=4.23.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting numpy (from vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading numpy-2.3.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting opentelemetry-exporter-otlp-proto-grpc==1.45.0 (from opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading opentelemetry_exporter_otlp_proto_grpc-1.45.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting opentelemetry-exporter-otlp-proto-http==1.45.0 (from opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached opentelemetry_exporter_otlp_proto_http-1.45.0-py3-none-any.whl.metadata (3.1 kB)
+Collecting googleapis-common-protos~=1.57 (from opentelemetry-exporter-otlp-proto-grpc==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->
+-r requirements.txt (line 2))
+ements.txt (line 2))
+lm>=0.12.0->-r requirements.txt (line 2))
+.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached opentelemetry_exporter_otlp_proto_common-1.45.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting opentelemetry-proto==1.45.0 (from opentelemetry-exporter-otlp-proto-grpc==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r
+requirements.txt (line 2))
+  Using cached opentelemetry_proto-1.45.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting opentelemetry-exporter-http-transport==0.66b0 (from opentelemetry-exporter-http-transport[urllib3]==0.66b0->opentelemetry-exporter-otlp-
+proto-http==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached opentelemetry_exporter_http_transport-0.66b0-py3-none-any.whl.metadata (2.3 kB)
+Collecting opentelemetry-semantic-conventions==0.66b0 (from opentelemetry-sdk>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached opentelemetry_semantic_conventions-0.66b0-py3-none-any.whl.metadata (2.4 kB)
+Collecting wcwidth>=0.1.4 (from prompt_toolkit>=3.0.36->click-repl>=0.2.0->celery->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached wcwidth-0.9.1-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (23 kB)
+Collecting pycountry>=23 (from pydantic-extra-types[pycountry]>=2.10.5->mistral_common>=1.11.6->mistral_common[image]>=1.11.6->vllm>=0.12.0->-r req
+uirements.txt (line 2))
+  Downloading pycountry-26.2.16-py3-none-any.whl.metadata (12 kB)
+Collecting python-dotenv>=0.21.0 (from pydantic-settings>=2.0.0->fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached python_dotenv-1.2.3-py3-none-any.whl.metadata (29 kB)
+Collecting charset_normalizer<4,>=2 (from requests>=2.26.0->vllm>=0.12.0->-r requirements.txt (line 2))
+  Using cached charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (45 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=12->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=12->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=12->dvc>=3.0->-r requirements.txt (line 15))
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch>=2.5.0->-r requirements.txt (line 20))
+  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting shellingham>=1.3.0 (from typer->transformers>=4.57.0->-r requirements.txt (line 3))
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirement
+s.txt (line 2))
+  Downloading httptools-0.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.
+txt (line 2))
+  Downloading uvloop-0.22.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=13.0 (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirement
+s.txt (line 2))
+  Downloading websockets-17.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+Collecting nvidia-nvvm (from nvidia-cuda-nvcc->humming-kernels[cu13]==0.1.12->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading nvidia_nvvm-13.4.92-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cuda-crt (from nvidia-cuda-nvcc->humming-kernels[cu13]==0.1.12->vllm>=0.12.0->-r requirements.txt (line 2))
+  Downloading nvidia_cuda_crt-13.4.92-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+Downloading vllm-0.30.0-cp38-abi3-manylinux_2_28_x86_64.whl (314.9 MB)
+   ──────────────────────────────────────── 314.9/314.9 MB 123.1 MB/s  0:00:02
+Downloading torch-2.13.0-cp312-cp312-manylinux_2_28_x86_64.whl (526.6 MB)
+   ──────────────────────────────────────── 526.6/526.6 MB 129.2 MB/s  0:00:04
+Downloading apache_tvm_ffi-0.1.11-cp312-abi3-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (2.7 MB)
+   ──────────────────────────────────────── 2.7/2.7 MB 261.9 MB/s  0:00:00
+Downloading compressed_tensors-0.17.0-py3-none-any.whl (211 kB)
+Downloading cuda_toolkit-13.0.3.0-py2.py3-none-any.whl (2.5 kB)
+Downloading depyf-0.20.0-py3-none-any.whl (39 kB)
+Downloading flashinfer_python-0.6.18.post1-py3-none-any.whl (18.3 MB)
+   ──────────────────────────────────────── 18.3/18.3 MB 94.4 MB/s  0:00:00
+Downloading humming_kernels-0.1.12-py3-none-manylinux_2_28_x86_64.whl (322 kB)
+Downloading lark-1.2.2-py3-none-any.whl (111 kB)
+Downloading lm_format_enforcer-0.11.3-py3-none-any.whl (45 kB)
+Downloading numba-0.65.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.8 MB)
+   ──────────────────────────────────────── 3.8/3.8 MB 94.9 MB/s  0:00:00
+Downloading nvidia_cudnn_cu13-9.20.0.48-py3-none-manylinux_2_27_x86_64.whl (366.2 MB)
+   ──────────────────────────────────────── 366.2/366.2 MB 164.8 MB/s  0:00:02
+Downloading nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl (170.1 MB)
+   ──────────────────────────────────────── 170.1/170.1 MB 117.1 MB/s  0:00:01
+Downloading nvidia_cutlass_dsl-4.7.1-py3-none-any.whl (10 kB)
+Downloading nvidia_cutlass_dsl_libs_base-4.7.1-cp312-cp312-manylinux_2_28_x86_64.whl (2.8 MB)
+   ──────────────────────────────────────── 2.8/2.8 MB 212.1 MB/s  0:00:00
+Downloading nvidia_cutlass_dsl_libs_core-4.7.1-py3-none-any.whl (1.2 MB)
+   ──────────────────────────────────────── 1.2/1.2 MB 198.1 MB/s  0:00:00
+Downloading nvidia_cutlass_dsl_libs_cu12-4.7.1-cp312-cp312-manylinux_2_28_x86_64.whl (88.7 MB)
+   ──────────────────────────────────────── 88.7/88.7 MB 147.7 MB/s  0:00:00
+Downloading nvidia_cutlass_dsl_libs_cu13-4.7.1-cp312-cp312-manylinux_2_28_x86_64.whl (88.3 MB)
+   ──────────────────────────────────────── 88.3/88.3 MB 142.1 MB/s  0:00:00
+Downloading nvidia_nccl_cu13-2.29.7-py3-none-manylinux_2_18_x86_64.whl (206.0 MB)
+   ──────────────────────────────────────── 206.0/206.0 MB 128.8 MB/s  0:00:01
+Downloading nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (60.4 MB)
+   ──────────────────────────────────────── 60.4/60.4 MB 241.8 MB/s  0:00:00
+Downloading nvtx-0.2.15-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+   ──────────────────────────────────────── 806.2/806.2 kB 278.4 MB/s  0:00:00
+Downloading outlines_core-0.2.14-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.3 MB)
+   ──────────────────────────────────────── 2.3/2.3 MB 174.8 MB/s  0:00:00
+Downloading pynvvideocodec-2.0.4-cp312-cp312-manylinux_2_28_x86_64.whl (43.2 MB)
+   ──────────────────────────────────────── 43.2/43.2 MB 67.4 MB/s  0:00:00
+Downloading quack_kernels-0.6.5-py3-none-any.whl (729 kB)
+   ──────────────────────────────────────── 729.6/729.6 kB 254.3 MB/s  0:00:00
+Downloading tilelang-0.1.12-cp38-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (50.5 MB)
+   ──────────────────────────────────────── 50.5/50.5 MB 137.7 MB/s  0:00:00
+Downloading tokenspeed_mla-0.1.8-py3-none-manylinux_2_28_x86_64.whl (755 kB)
+   ──────────────────────────────────────── 755.8/755.8 kB 159.6 MB/s  0:00:00
+Downloading torchaudio-2.11.0-cp312-cp312-manylinux_2_28_x86_64.whl (1.8 MB)
+   ──────────────────────────────────────── 1.8/1.8 MB 221.3 MB/s  0:00:00
+Downloading torchvision-0.28.0-cp312-cp312-manylinux_2_28_x86_64.whl (7.7 MB)
+   ──────────────────────────────────────── 7.7/7.7 MB 185.8 MB/s  0:00:00
+Downloading triton-3.7.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (197.7 MB)
+   ──────────────────────────────────────── 197.7/197.7 MB 153.3 MB/s  0:00:01
+Downloading xgrammar-0.2.8-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (1.3 MB)
+   ──────────────────────────────────────── 1.3/1.3 MB 180.3 MB/s  0:00:00
+Downloading cuda_bindings-13.4.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (7.2 MB)
+   ──────────────────────────────────────── 7.2/7.2 MB 248.6 MB/s  0:00:00
+Downloading fastapi-0.136.3-py3-none-any.whl (117 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading llguidance-1.7.6-cp39-abi3-manylinux_2_31_x86_64.whl (3.1 MB)
+   ──────────────────────────────────────── 3.1/3.1 MB 223.4 MB/s  0:00:00
+Downloading llvmlite-0.47.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (56.3 MB)
+   ──────────────────────────────────────── 56.3/56.3 MB 172.7 MB/s  0:00:00
+Downloading mcp-2.2.0-py3-none-any.whl (365 kB)
+Downloading mcp_types-2.2.0-py3-none-any.whl (69 kB)
+Downloading model_hosting_container_standards-0.1.16-py3-none-any.whl (125 kB)
+Downloading nvidia_cublas-13.1.1.3-py3-none-manylinux_2_27_x86_64.whl (423.1 MB)
+   ──────────────────────────────────────── 423.1/423.1 MB 202.5 MB/s  0:00:02
+Downloading nvidia_cuda_cupti-13.0.85-py3-none-manylinux_2_25_x86_64.whl (10.7 MB)
+   ──────────────────────────────────────── 10.7/10.7 MB 194.6 MB/s  0:00:00
+Downloading nvidia_cuda_nvdisasm-13.4.92-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+   ──────────────────────────────────────── 5.2/5.2 MB 156.5 MB/s  0:00:00
+Downloading nvidia_cuda_nvrtc-13.0.88-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (90.2 MB)
+   ──────────────────────────────────────── 90.2/90.2 MB 208.6 MB/s  0:00:00
+Downloading nvidia_cuda_runtime-13.0.96-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ──────────────────────────────────────── 2.2/2.2 MB 254.3 MB/s  0:00:00
+Downloading nvidia_cufft-12.0.0.61-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (214.1 MB)
+   ──────────────────────────────────────── 214.1/214.1 MB 181.9 MB/s  0:00:01
+Downloading nvidia_cufile-1.15.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+   ──────────────────────────────────────── 1.2/1.2 MB 241.1 MB/s  0:00:00
+Downloading nvidia_curand-10.4.0.35-py3-none-manylinux_2_27_x86_64.whl (59.5 MB)
+   ──────────────────────────────────────── 59.5/59.5 MB 163.6 MB/s  0:00:00
+Downloading nvidia_cusolver-12.0.4.66-py3-none-manylinux_2_27_x86_64.whl (200.9 MB)
+   ──────────────────────────────────────── 200.9/200.9 MB 251.5 MB/s  0:00:00
+Downloading nvidia_cusparse-12.6.3.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (145.9 MB)
+   ──────────────────────────────────────── 145.9/145.9 MB 225.0 MB/s  0:00:00
+Downloading nvidia_nvjitlink-13.4.92-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (42.5 MB)
+   ──────────────────────────────────────── 42.5/42.5 MB 267.4 MB/s  0:00:00
+Downloading nvidia_nvtx-13.0.85-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl (148 kB)
+Downloading setuptools-80.10.2-py3-none-any.whl (1.1 MB)
+   ──────────────────────────────────────── 1.1/1.1 MB 226.5 MB/s  0:00:00
+Downloading z3_solver-4.15.4.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (29.3 MB)
+   ──────────────────────────────────────── 29.3/29.3 MB 143.0 MB/s  0:00:00
+Downloading transformers-5.17.0-py3-none-any.whl (12.3 MB)
+   ──────────────────────────────────────── 12.3/12.3 MB 248.7 MB/s  0:00:00
+Downloading huggingface_hub-1.33.0-py3-none-any.whl (846 kB)
+   ──────────────────────────────────────── 846.4/846.4 kB 279.6 MB/s  0:00:00
+Using cached click-8.5.0-py3-none-any.whl (125 kB)
+Downloading hf_xet-1.6.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.5 MB)
+   ──────────────────────────────────────── 4.5/4.5 MB 262.6 MB/s  0:00:00
+Downloading tokenizers-0.23.2-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.4 MB)
+   ──────────────────────────────────────── 3.4/3.4 MB 267.8 MB/s  0:00:00
+Downloading accelerate-1.15.0-py3-none-any.whl (394 kB)
+Downloading pillow-12.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
+   ──────────────────────────────────────── 6.9/6.9 MB 268.6 MB/s  0:00:00
+Using cached pydantic-2.13.5-py3-none-any.whl (472 kB)
+Using cached pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+Using cached dvc-3.67.1-py3-none-any.whl (470 kB)
+Using cached dpath-2.2.0-py3-none-any.whl (17 kB)
+Using cached dvc_data-3.18.3-py3-none-any.whl (79 kB)
+Using cached dvc_objects-5.2.0-py3-none-any.whl (33 kB)
+Using cached dvc_render-1.0.2-py3-none-any.whl (22 kB)
+Using cached dvc_studio_client-0.23.0-py3-none-any.whl (16 kB)
+Using cached dvc_task-0.40.2-py3-none-any.whl (21 kB)
+Using cached celery-5.6.3-py3-none-any.whl (451 kB)
+Using cached billiard-4.3.0-py3-none-any.whl (88 kB)
+Using cached flatten_dict-0.5.0-py3-none-any.whl (9.9 kB)
+Using cached flufl_lock-9.1.0-py3-none-any.whl (11 kB)
+Using cached grandalf-0.8-py3-none-any.whl (41 kB)
+Using cached gto-1.10.1-py3-none-any.whl (45 kB)
+Using cached kombu-5.6.2-py3-none-any.whl (214 kB)
+Using cached vine-5.1.0-py3-none-any.whl (9.6 kB)
+Using cached amqp-5.4.0-py3-none-any.whl (51 kB)
+Using cached orjson-3.12.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (131 kB)
+Using cached pathspec-1.1.1-py3-none-any.whl (57 kB)
+Using cached platformdirs-4.12.0-py3-none-any.whl (32 kB)
+Using cached scmrepo-3.6.2-py3-none-any.whl (74 kB)
+Using cached asyncssh-2.24.0-py3-none-any.whl (381 kB)
+Using cached dulwich-1.2.15-cp312-cp312-manylinux_2_28_x86_64.whl (1.5 MB)
+Using cached shtab-1.12.1-py3-none-any.whl (22 kB)
+Using cached sqltrie-0.11.3-py3-none-any.whl (17 kB)
+Using cached tqdm-4.70.1-py3-none-any.whl (80 kB)
+Downloading peft-0.21.0-py3-none-any.whl (832 kB)
+   ──────────────────────────────────────── 832.9/832.9 kB 218.9 MB/s  0:00:00
+Downloading datasets-5.0.1-py3-none-any.whl (559 kB)
+   ──────────────────────────────────────── 559.1/559.1 kB 200.0 MB/s  0:00:00
+Downloading dill-0.4.1-py3-none-any.whl (120 kB)
+Downloading fsspec-2026.6.0-py3-none-any.whl (203 kB)
+Downloading multiprocess-0.70.19-py312-none-any.whl (150 kB)
+Using cached aiohttp-3.14.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.8 MB)
+Using cached multidict-6.9.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (336 kB)
+Using cached yarl-1.25.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (117 kB)
+Using cached aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+Using cached aiohttp_retry-2.9.1-py3-none-any.whl (10.0 kB)
+Using cached aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Using cached annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading anthropic-1.8.0-py3-none-any.whl (1.3 MB)
+   ──────────────────────────────────────── 1.3/1.3 MB 266.0 MB/s  0:00:00
+Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+Downloading docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+Downloading httpx2-2.13.1-py3-none-any.whl (95 kB)
+Downloading httpcore2-2.13.1-py3-none-any.whl (83 kB)
+Downloading jiter-0.17.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (345 kB)
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached attrs-26.1.0-py3-none-any.whl (67 kB)
+Using cached click_didyoumean-0.3.1-py3-none-any.whl (3.6 kB)
+Using cached click_plugins-1.1.1.2-py2.py3-none-any.whl (11 kB)
+Using cached click_repl-0.4.0-py3-none-any.whl (14 kB)
+Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Using cached configobj-5.0.9-py2.py3-none-any.whl (35 kB)
+Using cached cryptography-50.0.1-cp311-abi3-manylinux_2_34_x86_64.whl (4.7 MB)
+Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Downloading cuda_pathfinder-1.8.2-py3-none-any.whl (62 kB)
+Downloading cuda_python-13.4.1-py3-none-any.whl (7.6 kB)
+Downloading cuda_core-1.2.1-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+   ──────────────────────────────────────── 6.6/6.6 MB 190.8 MB/s  0:00:00
+Downloading cuda_tile-1.6.0-cp312-cp312-manylinux2014_x86_64.whl (382 kB)
+Using cached dictdiffer-0.10.0-py3-none-any.whl (16 kB)
+Using cached diskcache-5.6.3-py3-none-any.whl (45 kB)
+Using cached distro-1.9.0-py3-none-any.whl (20 kB)
+Using cached dvc_http-2.32.0-py3-none-any.whl (12 kB)
+Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+Downloading fastapi_cli-0.0.32-py3-none-any.whl (14 kB)
+Downloading fastapi_cloud_cli-0.26.0-py3-none-any.whl (108 kB)
+Downloading agent_detector-2.0.0-py3-none-any.whl (9.4 kB)
+Downloading detect_installer-0.2.1-py3-none-any.whl (5.4 kB)
+Downloading fastar-0.12.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (808 kB)
+   ──────────────────────────────────────── 808.1/808.1 kB 297.3 MB/s  0:00:00
+Downloading fastsafetensors-0.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (2.1 MB)
+   ──────────────────────────────────────── 2.1/2.1 MB 270.0 MB/s  0:00:00
+Using cached filelock-4.0.4-py3-none-any.whl (108 kB)
+Using cached frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (242 kB)
+Using cached funcy-2.1-py3-none-any.whl (29 kB)
+Using cached gitpython-3.1.62-py3-none-any.whl (222 kB)
+Using cached gitdb-4.0.12-py3-none-any.whl (62 kB)
+Using cached smmap-5.0.3-py3-none-any.whl (24 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Using cached hydra_core-1.3.7-py3-none-any.whl (168 kB)
+Using cached omegaconf-2.3.1-py3-none-any.whl (79 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Downloading instanttensor-0.2.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.2 MB)
+   ──────────────────────────────────────── 6.2/6.2 MB 132.8 MB/s  0:00:00
+Downloading interegular-0.3.3-py37-none-any.whl (23 kB)
+Using cached iterative_telemetry-0.0.10-py3-none-any.whl (10 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading mistral_common-1.12.0-py3-none-any.whl (6.6 MB)
+   ──────────────────────────────────────── 6.6/6.6 MB 293.8 MB/s  0:00:00
+Downloading numpy-2.3.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
+   ──────────────────────────────────────── 16.6/16.6 MB 281.8 MB/s  0:00:00
+Downloading nccl4py-0.6.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (3.7 MB)
+   ──────────────────────────────────────── 3.7/3.7 MB 193.1 MB/s  0:00:00
+Using cached networkx-3.7-py3-none-any.whl (2.1 MB)
+Downloading nvidia_cudnn_frontend-1.30.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (8.8 MB)
+   ──────────────────────────────────────── 8.8/8.8 MB 190.5 MB/s  0:00:00
+Downloading openai-3.19.2-py3-none-any.whl (2.1 MB)
+   ──────────────────────────────────────── 2.1/2.1 MB 279.8 MB/s  0:00:00
+Downloading openai_harmony-0.0.8-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+   ──────────────────────────────────────── 3.0/3.0 MB 124.7 MB/s  0:00:00
+Downloading opencv_python_headless-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl (61.2 MB)
+   ──────────────────────────────────────── 61.2/61.2 MB 152.0 MB/s  0:00:00
+Using cached opentelemetry_api-1.45.0-py3-none-any.whl (60 kB)
+Downloading opentelemetry_exporter_otlp-1.45.0-py3-none-any.whl (6.7 kB)
+Downloading opentelemetry_exporter_otlp_proto_grpc-1.45.0-py3-none-any.whl (19 kB)
+Using cached opentelemetry_exporter_otlp_common-0.66b0-py3-none-any.whl (12 kB)
+Using cached opentelemetry_exporter_otlp_proto_common-1.45.0-py3-none-any.whl (15 kB)
+Using cached opentelemetry_exporter_otlp_proto_http-1.45.0-py3-none-any.whl (22 kB)
+Using cached opentelemetry_exporter_http_transport-0.66b0-py3-none-any.whl (12 kB)
+Using cached opentelemetry_proto-1.45.0-py3-none-any.whl (72 kB)
+Using cached googleapis_common_protos-1.75.4-py3-none-any.whl (307 kB)
+Downloading grpcio-1.84.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (7.2 MB)
+   ──────────────────────────────────────── 7.2/7.2 MB 346.6 MB/s  0:00:00
+Using cached opentelemetry_sdk-1.45.0-py3-none-any.whl (140 kB)
+Using cached opentelemetry_semantic_conventions-0.66b0-py3-none-any.whl (206 kB)
+Using cached protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (343 kB)
+Downloading opentelemetry_semantic_conventions_ai-0.5.1-py3-none-any.whl (11 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Downloading prometheus_client-0.26.0-py3-none-any.whl (64 kB)
+Downloading prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl (19 kB)
+Downloading starlette-1.7.0-py3-none-any.whl (78 kB)
+Using cached prompt_toolkit-3.0.53-py3-none-any.whl (392 kB)
+Using cached propcache-0.5.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (250 kB)
+Using cached psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+Downloading pyarrow-25.0.1-cp312-cp312-manylinux_2_28_x86_64.whl (50.1 MB)
+   ──────────────────────────────────────── 50.1/50.1 MB 270.9 MB/s  0:00:00
+Downloading pydantic_extra_types-2.11.1-py3-none-any.whl (79 kB)
+Downloading pycountry-26.2.16-py3-none-any.whl (8.0 MB)
+   ──────────────────────────────────────── 8.0/8.0 MB 171.2 MB/s  0:00:00
+Using cached pydantic_settings-2.15.0-py3-none-any.whl (69 kB)
+Using cached pydot-4.0.1-py3-none-any.whl (37 kB)
+Using cached pygit2-1.20.1-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.8 MB)
+Using cached pygtrie-2.6.2-py3-none-any.whl (33 kB)
+Downloading pyjwt-2.15.0-py3-none-any.whl (33 kB)
+Using cached pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Using cached python_dotenv-1.2.3-py3-none-any.whl (22 kB)
+Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
+Using cached pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+Downloading pyzmq-27.2.0-cp312-abi3-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (872 kB)
+   ──────────────────────────────────────── 872.3/872.3 kB 298.8 MB/s  0:00:00
+Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Downloading regex-2026.9.10-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (804 kB)
+   ──────────────────────────────────────── 804.6/804.6 kB 285.3 MB/s  0:00:00
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Using cached charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (248 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Using cached certifi-2026.7.22-py3-none-any.whl (136 kB)
+Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading rich_toolkit-0.20.5-py3-none-any.whl (39 kB)
+Downloading rignore-0.8.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (927 kB)
+   ──────────────────────────────────────── 927.8/927.8 kB 296.3 MB/s  0:00:00
+Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (366 kB)
+Using cached ruamel_yaml-0.19.1-py3-none-any.whl (118 kB)
+Downloading safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (516 kB)
+Using cached semver-3.1.0-py3-none-any.whl (18 kB)
+Downloading sentry_sdk-2.70.0-py3-none-any.whl (531 kB)
+   ──────────────────────────────────────── 531.8/531.8 kB 182.2 MB/s  0:00:00
+Using cached shortuuid-1.0.13-py3-none-any.whl (10 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading sse_starlette-3.4.11-py3-none-any.whl (17 kB)
+Downloading supervisor-4.3.0-py2.py3-none-any.whl (320 kB)
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ──────────────────────────────────────── 6.3/6.3 MB 291.8 MB/s  0:00:00
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ──────────────────────────────────────── 536.2/536.2 kB 182.2 MB/s  0:00:00
+Using cached tabulate-0.10.0-py3-none-any.whl (39 kB)
+Downloading tiktoken-0.14.0-cp312-cp312-manylinux_2_28_x86_64.whl (1.2 MB)
+   ──────────────────────────────────────── 1.2/1.2 MB 239.5 MB/s  0:00:00
+Downloading tokenspeed_triton-3.8.10.post20260920-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (99.9 MB)
+   ──────────────────────────────────────── 99.9/99.9 MB 139.3 MB/s  0:00:00
+Using cached tomlkit-0.15.1-py3-none-any.whl (49 kB)
+Downloading torchcodec-0.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.5 MB)
+   ──────────────────────────────────────── 9.5/9.5 MB 37.0 MB/s  0:00:00
+Downloading truststore-0.10.4-py3-none-any.whl (18 kB)
+Downloading typer-0.27.2-py3-none-any.whl (123 kB)
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Using cached typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Using cached tzdata-2026.4-py2.py3-none-any.whl (347 kB)
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+Downloading httptools-0.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (523 kB)
+Downloading uvloop-0.22.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.4 MB)
+   ──────────────────────────────────────── 4.4/4.4 MB 276.9 MB/s  0:00:00
+Using cached voluptuous-0.16.0-py3-none-any.whl (31 kB)
+Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+Using cached wcwidth-0.9.1-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (768 kB)
+Downloading websockets-17.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (224 kB)
+Using cached zc_lockfile-4.0-py3-none-any.whl (9.1 kB)
+Downloading partial_json_parser-0.2.1.1.post7-py3-none-any.whl (10 kB)
+nn-frontend, flashinfer-python, vllm
+
+Successfully installed MarkupSafe-3.0.3 Pillow-12.3.0 PyNvVideoCodec-2.0.4 accelerate-1.15.0 agent-detector-2.0.0 aiohappyeyeballs-2.7.1 aiohttp-3.
+14.3 aiohttp-retry-2.9.1 aiosignal-1.4.0 amqp-5.4.0 annotated-doc-0.0.5 annotated-types-0.8.0 anthropic-1.8.0 antlr4-python3-runtime-4.9.3 anyio-4.
+15.1 apache-tvm-ffi-0.1.11 appdirs-1.4.4 astor-0.8.1 asyncssh-2.24.0 atpublic-8.0.1 attrs-26.1.0 billiard-4.3.0 blake3-1.0.9 cachetools-7.2.0 cbor2
+-6.1.4 celery-5.6.3 certifi-2026.7.22 cffi-2.1.1 charset_normalizer-3.5.1 click-8.5.0 click-didyoumean-0.3.1 click-plugins-1.1.1.2 click-repl-0.4.0
+ cloudpickle-3.1.2 colorama-0.4.6 compressed-tensors-0.17.0 configobj-5.0.9 cryptography-50.0.1 cuda-bindings-13.4.3 cuda-core-1.2.1 cuda-pathfinde
+r-1.8.2 cuda-python-13.4.1 cuda-tile-1.6.0 cuda-toolkit-13.0.3.0 datasets-5.0.1 depyf-0.20.0 detect-installer-0.2.1 dictdiffer-0.10.0 dill-0.4.1 di
+skcache-5.6.3 distro-1.9.0 dnspython-2.8.0 docstring-parser-0.18.0 dpath-2.2.0 dulwich-1.2.15 dvc-3.67.1 dvc-data-3.18.3 dvc-http-2.32.0 dvc-object
+s-5.2.0 dvc-render-1.0.2 dvc-studio-client-0.23.0 dvc-task-0.40.2 einops-0.8.2 email-validator-2.3.0 entrypoints-0.4 fastapi-0.136.3 fastapi-cli-0.
+0.32 fastapi-cloud-cli-0.26.0 fastar-0.12.0 fastsafetensors-0.4.0 filelock-4.0.4 flashinfer-python-0.6.18.post1 flatten-dict-0.5.0 flufl.lock-9.1.0
+ frozenlist-1.8.0 fsspec-2026.6.0 funcy-2.1 gitdb-4.0.12 gitpython-3.1.62 googleapis-common-protos-1.75.4 grandalf-0.8 grpcio-1.84.0 gto-1.10.1 h11
+-0.16.0 hf-xet-1.6.0 httpcore-1.0.9 httpcore2-2.13.1 httptools-0.8.0 httpx-0.28.1 httpx2-2.13.1 huggingface_hub-1.33.0 humming-kernels-0.1.12 hydra
+-core-1.3.7 idna-3.20 ijson-3.5.1 instanttensor-0.2.0 interegular-0.3.3 iterative-telemetry-0.0.10 jinja2-3.1.6 jiter-0.17.0 jmespath-1.1.0 jsonsch
+gspec-0.21.1 multidict-6.9.1 multiprocess-0.70.19 nccl4py-0.6.0 networkx-3.7 ninja-1.13.2 numba-0.65.0 numpy-2.3.5 nvidia-cublas-13.1.1.3 nvidia-cu
+da-cccl-13.3.4.3.1 nvidia-cuda-crt-13.4.92 nvidia-cuda-cupti-13.0.85 nvidia-cuda-nvcc-13.4.92 nvidia-cuda-nvdisasm-13.4.92 nvidia-cuda-nvrtc-13.0.8
+8 nvidia-cuda-runtime-13.0.96 nvidia-cudnn-cu13-9.20.0.48 nvidia-cudnn-frontend-1.30.0 nvidia-cufft-12.0.0.61 nvidia-cufile-1.15.1.6 nvidia-curand-
+10.4.0.35 nvidia-cusolver-12.0.4.66 nvidia-cusparse-12.6.3.3 nvidia-cusparselt-cu13-0.8.1 nvidia-cutlass-dsl-4.7.1 nvidia-cutlass-dsl-libs-base-4.7
+.1 nvidia-cutlass-dsl-libs-core-4.7.1 nvidia-cutlass-dsl-libs-cu12-4.7.1 nvidia-cutlass-dsl-libs-cu13-4.7.1 nvidia-ml-py-13.615.71 nvidia-nccl-cu13
+-2.29.7 nvidia-nvjitlink-13.4.92 nvidia-nvshmem-cu13-3.4.5 nvidia-nvtx-13.0.85 nvidia-nvvm-13.4.92 nvtx-0.2.15 omegaconf-2.3.1 openai-3.19.2 openai
+Requirement already satisfied: setuptools>=77.0.3 in ./.venv/lib/python3.12/site-packages (from torch->flash-attn>=2.6.0) (80.10.2)
+Requirement already satisfied: sympy>=1.13.3 in ./.venv/lib/python3.12/site-packages (from torch->flash-attn>=2.6.0) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in ./.venv/lib/python3.12/site-packages (from torch->flash-attn>=2.6.0) (3.7)
+Requirement already satisfied: jinja2 in ./.venv/lib/python3.12/site-packages (from torch->flash-attn>=2.6.0) (3.1.6)
+Requirement already satisfied: fsspec>=0.8.5 in ./.venv/lib/python3.12/site-packages (from torch->flash-attn>=2.6.0) (2026.6.0)
+Requirement already satisfied: cuda-bindings<14,>=13.0.3 in ./.venv/lib/python3.12/site-packages (from torch->flash-attn>=2.6.0) (13.4.3)
+Requirement already satisfied: nvidia-cudnn-cu13==9.20.0.48 in ./.venv/lib/python3.12/site-packages (from torch->flash-attn>=2.6.0) (9.20.0.48)
+          super().run_command(command)
+        File "/document-parsing/.venv/lib/python3.12/site-packages/setuptools/_distutils/dist.py", line 1021, in run_command
+          cmd_obj.run()
+        File "/document-parsing/.venv/lib/python3.12/site-packages/setuptools/_distutils/cmd.py", line 357, in run_command
+          self.distribution.run_command(command)
+        File "/document-parsing/.venv/lib/python3.12/site-packages/setuptools/_distutils/dist.py", line 1021, in run_command
+          cmd_obj.run()
+        File "/document-parsing/.venv/lib/python3.12/site-packages/setuptools/_distutils/cmd.py", line 357, in run_command
+        File "/document-parsing/.venv/lib/python3.12/site-packages/torch/utils/cpp_extension.py", line 817, in build_extensions
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: failed-wheel-build-for-install
+
+_ Failed to build installable wheels for some pyproject.toml based projects
+_─> flash-attn
+(.venv) root@aafde635cae8:/document-parsing# git pull
+remote: Enumerating objects: 9, done.
+remote: Counting objects: 100% (9/9), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 5 (delta 4), reused 5 (delta 4), pack-reused 0 (from 0)
+Unpacking objects: 100% (5/5), 406 bytes | 406.00 KiB/s, done.
+From https://github.com/Marouanelmzr/document-parsing
+   b488872..0ebd55f  main       -> origin/main
+Updating b488872..0ebd55f
+Fast-forward
+ src/training/smoke_test.sh | 2 --
+ 1 file changed, 2 deletions(-)
+(.venv) root@aafde635cae8:/document-parsing# bash src/training/smoke_test.sh
+========================================
+ Smoke Test - Invoice LoRA Training
+========================================
+Model         : Qwen/Qwen3-VL-4B-Instruct
+========================================
+
+NOTE: this run's model output is NOT tracked with DVC and will
+Requirement already satisfied: pip in ./.venv/lib/python3.12/site-packages (26.2.1)
+Requirement already satisfied: xgrammar>=0.1.11 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 6)) (0.2.8)
+Requirement already satisfied: dvc>=3.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 15)) (3.67.1)
+Requirement already satisfied: cachetools in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.0)
+Requirement already satisfied: psutil in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.2)
+Requirement already satisfied: blake3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.0.9)
+Requirement already satisfied: py-cpuinfo in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (9.0.0)
+Requirement already satisfied: safetensors>=0.6.2 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.8.0)
+Requirement already satisfied: fastapi<0.137.0,>=0.133.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0
+.12.0->-r requirements.txt (line 2)) (0.136.3)
+Requirement already satisfied: starlette>=1.0.1 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.7.0)
+Requirement already satisfied: aiohttp>=3.13.3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.14.3)
+Requirement already satisfied: openai>=2.25.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.19.2)
+Requirement already satisfied: prometheus_client>=0.18.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(0.26.0)
+Requirement already satisfied: prometheus-fastapi-instrumentator>=8.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements
+.txt (line 2)) (8.1.0)
+ (0.11.3)
+Requirement already satisfied: outlines_core==0.2.14 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.2
+)
+Requirement already satisfied: opencv-python-headless>=4.13.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line
+Requirement already satisfied: compressed-tensors==0.17.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+Requirement already satisfied: cloudpickle in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.1.2)
+Requirement already satisfied: mcp<3.0.0,>=2.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: opentelemetry-sdk>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(1.45.0)
+Requirement already satisfied: opentelemetry-api>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+.4)
+fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.0.32)
+Requirement already satisfied: email-validator>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12
+.0->-r requirements.txt (line 2)) (2.3.0)
+Requirement already satisfied: uvicorn>=0.12.0 in ./.venv/lib/python3.12/site-packages (from uvicorn[standard]>=0.12.0; extra == "standard"->fastap
+i[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.54.0)
+Requirement already satisfied: pydantic-settings>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.
+12.0->-r requirements.txt (line 2)) (2.15.0)
+Requirement already satisfied: pydantic-extra-types>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>
+=0.12.0->-r requirements.txt (line 2)) (4.15.1)
+Requirement already satisfied: certifi in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vll
+m>=0.12.0->-r requirements.txt (line 2)) (2026.7.22)
+Requirement already satisfied: idna in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vllm>=
+.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: httpx2>=2.5.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt (li
+ne 2)) (2.13.1)
+Requirement already satisfied: mcp-types==2.2.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt
+(line 2)) (2.2.0)
+Requirement already satisfied: sse-starlette>=3.0.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (3.4.11)
+Requirement already satisfied: jmespath in ./.venv/lib/python3.12/site-packages (from model-hosting-container-standards<1.0.0,>=0.1.14->vllm>=0.12.
+lm>=0.12.0->-r requirements.txt (line 2)) (4.3.0)
+Requirement already satisfied: typer in ./.venv/lib/python3.12/site-packages (from transformers>=4.57.0->-r requirements.txt (line 3)) (0.27.2)
+Requirement already satisfied: hf-xet<2.0.0,>=1.6.0 in ./.venv/lib/python3.12/site-packages (from huggingface_hub>=0.25.0->-r requirements.txt (lin
+e 12)) (1.6.0)
+Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (0
+.8.0)
+Requirement already satisfied: pydantic-core==2.46.5 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (2.
+46.5)
+Requirement already satisfied: attrs>=22.2.0 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (26.1.0)
+Requirement already satisfied: celery in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (5.6.3)
+Requirement already satisfied: colorama>=0.3.9 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (0.4.6)
+.0.10)
+Requirement already satisfied: billiard<5.0,>=4.2.1 in ./.venv/lib/python3.12/site-packages (from celery->dvc>=3.0->-r requirements.txt (line 15))
+(4.3.0)
+Requirement already satisfied: opentelemetry-exporter-otlp-proto-common==1.45.0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporte
+r-otlp-proto-grpc==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2)) (1.45.0)
+Requirement already satisfied: opentelemetry-proto==1.45.0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporter-otlp-proto-grpc==1.
+45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2)) (1.45.0)
+Requirement already satisfied: opentelemetry-exporter-http-transport==0.66b0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporter-h
+ttp-transport[urllib3]==0.66b0->opentelemetry-exporter-otlp-proto-http==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (0.66b0)
+Requirement already satisfied: opentelemetry-semantic-conventions==0.66b0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-sdk>=1.27.0->
+vllm>=0.12.0->-r requirements.txt (line 2)) (0.66b0)
+Requirement already satisfied: wcwidth>=0.1.4 in ./.venv/lib/python3.12/site-packages (from prompt_toolkit>=3.0.36->click-repl>=0.2.0->celery->dvc>
+=3.0->-r requirements.txt (line 15)) (0.9.1)
+Requirement already satisfied: python-dotenv>=0.21.0 in ./.venv/lib/python3.12/site-packages (from pydantic-settings>=2.0.0->fastapi[standard]<0.13
+Requirement already satisfied: mdurl~=0.1 in ./.venv/lib/python3.12/site-packages (from markdown-it-py>=2.2.0->rich>=12->dvc>=3.0->-r requirements.
+ine 3)) (1.5.4)
+Requirement already satisfied: uvloop>=0.15.1 in ./.venv/lib/python3.12/site-packages (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi
+[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.22.1)
+Requirement already satisfied: nvidia-nvvm in ./.venv/lib/python3.12/site-packages (from nvidia-cuda-nvcc->humming-kernels[cu13]==0.1.12->vllm>=0.1
+Train images: 8000 | Val images: 1000
+Traceback (most recent call last):
+  File "/document-parsing/src/training/train.py", line 37, in <module>
+    from dataset import InvoiceVLDataset, LengthGroupedSampler, make_collate_fn
+  File "/document-parsing/src/training/dataset.py", line 37, in <module>
+    from src.benchmark.adapters import VISION_CHAT_PROMPT  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'src'
+(.venv) root@aafde635cae8:/document-parsing# git pull
+remote: Enumerating objects: 9, done.
+remote: Counting objects: 100% (9/9), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 5 (delta 4), reused 5 (delta 4), pack-reused 0 (from 0)
+Unpacking objects: 100% (5/5), 413 bytes | 413.00 KiB/s, done.
+From https://github.com/Marouanelmzr/document-parsing
+   0ebd55f..2d5b5ed  main       -> origin/main
+Updating 0ebd55f..2d5b5ed
+Fast-forward
+ src/training/smoke_test.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+(.venv) root@aafde635cae8:/document-parsing# bash src/training/smoke_test.sh
+========================================
+ Smoke Test - Invoice LoRA Training
+========================================
+Model         : Qwen/Qwen3-VL-4B-Instruct
+========================================
+
+NOTE: this run's model output is NOT tracked with DVC and will
+Requirement already satisfied: pip in ./.venv/lib/python3.12/site-packages (26.2.1)
+Requirement already satisfied: xgrammar>=0.1.11 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 6)) (0.2.8)
+Requirement already satisfied: dvc>=3.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 15)) (3.67.1)
+Requirement already satisfied: cachetools in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.0)
+Requirement already satisfied: psutil in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.2)
+Requirement already satisfied: blake3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.0.9)
+Requirement already satisfied: py-cpuinfo in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (9.0.0)
+Requirement already satisfied: safetensors>=0.6.2 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.8.0)
+Requirement already satisfied: fastapi<0.137.0,>=0.133.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0
+.12.0->-r requirements.txt (line 2)) (0.136.3)
+Requirement already satisfied: starlette>=1.0.1 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.7.0)
+Requirement already satisfied: aiohttp>=3.13.3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.14.3)
+Requirement already satisfied: openai>=2.25.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.19.2)
+Requirement already satisfied: prometheus_client>=0.18.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(0.26.0)
+Requirement already satisfied: prometheus-fastapi-instrumentator>=8.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements
+.txt (line 2)) (8.1.0)
+ (0.11.3)
+Requirement already satisfied: outlines_core==0.2.14 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.2
+)
+Requirement already satisfied: opencv-python-headless>=4.13.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line
+Requirement already satisfied: compressed-tensors==0.17.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+Requirement already satisfied: cloudpickle in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.1.2)
+Requirement already satisfied: mcp<3.0.0,>=2.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: opentelemetry-sdk>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(1.45.0)
+Requirement already satisfied: opentelemetry-api>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+.4)
+fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.0.32)
+Requirement already satisfied: email-validator>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12
+.0->-r requirements.txt (line 2)) (2.3.0)
+Requirement already satisfied: uvicorn>=0.12.0 in ./.venv/lib/python3.12/site-packages (from uvicorn[standard]>=0.12.0; extra == "standard"->fastap
+i[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.54.0)
+Requirement already satisfied: pydantic-settings>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.
+12.0->-r requirements.txt (line 2)) (2.15.0)
+Requirement already satisfied: pydantic-extra-types>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>
+=0.12.0->-r requirements.txt (line 2)) (4.15.1)
+Requirement already satisfied: certifi in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vll
+m>=0.12.0->-r requirements.txt (line 2)) (2026.7.22)
+Requirement already satisfied: idna in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vllm>=
+.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: httpx2>=2.5.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt (li
+ne 2)) (2.13.1)
+Requirement already satisfied: mcp-types==2.2.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt
+(line 2)) (2.2.0)
+Requirement already satisfied: sse-starlette>=3.0.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (3.4.11)
+Requirement already satisfied: jmespath in ./.venv/lib/python3.12/site-packages (from model-hosting-container-standards<1.0.0,>=0.1.14->vllm>=0.12.
+lm>=0.12.0->-r requirements.txt (line 2)) (4.3.0)
+Requirement already satisfied: typer in ./.venv/lib/python3.12/site-packages (from transformers>=4.57.0->-r requirements.txt (line 3)) (0.27.2)
+Requirement already satisfied: hf-xet<2.0.0,>=1.6.0 in ./.venv/lib/python3.12/site-packages (from huggingface_hub>=0.25.0->-r requirements.txt (lin
+e 12)) (1.6.0)
+Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (0
+.8.0)
+Requirement already satisfied: pydantic-core==2.46.5 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (2.
+46.5)
+Requirement already satisfied: attrs>=22.2.0 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (26.1.0)
+Requirement already satisfied: celery in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (5.6.3)
+Requirement already satisfied: colorama>=0.3.9 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (0.4.6)
+.0.10)
+Requirement already satisfied: billiard<5.0,>=4.2.1 in ./.venv/lib/python3.12/site-packages (from celery->dvc>=3.0->-r requirements.txt (line 15))
+(4.3.0)
+Requirement already satisfied: opentelemetry-proto==1.45.0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporter-otlp-proto-grpc==1.
+45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2)) (1.45.0)
+Requirement already satisfied: opentelemetry-exporter-http-transport==0.66b0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporter-h
+ttp-transport[urllib3]==0.66b0->opentelemetry-exporter-otlp-proto-http==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (0.66b0)
+Requirement already satisfied: opentelemetry-semantic-conventions==0.66b0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-sdk>=1.27.0->
+vllm>=0.12.0->-r requirements.txt (line 2)) (0.66b0)
+Requirement already satisfied: wcwidth>=0.1.4 in ./.venv/lib/python3.12/site-packages (from prompt_toolkit>=3.0.36->click-repl>=0.2.0->celery->dvc>
+=1.11.6->mistral_common[image]>=1.11.6->vllm>=0.12.0->-r requirements.txt (line 2)) (26.2.16)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.venv/lib/python3.12/site-packages (from rich>=12->dvc>=3.0->-r requirements.txt (line
+txt (line 15)) (0.1.2)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.12/site-packages (from sympy>=1.13.3->torch>=2.5.0->-r requirements.txt (l
+ine 20)) (1.3.0)
+Requirement already satisfied: httptools>=0.8.0 in ./.venv/lib/python3.12/site-packages (from uvicorn[standard]>=0.12.0; extra == "standard"->fasta
+pi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.8.0)
+pi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (17.1)
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/document-parsing/src/training/train.py", line 37, in <module>
+    from dataset import InvoiceVLDataset, LengthGroupedSampler, make_collate_fn
+ModuleNotFoundError: No module named 'dataset'
+(.venv) root@aafde635cae8:/document-parsing# git pull
+remote: Enumerating objects: 11, done.
+remote: Counting objects: 100% (11/11), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 6 (delta 5), reused 6 (delta 5), pack-reused 0 (from 0)
+Unpacking objects: 100% (6/6), 498 bytes | 498.00 KiB/s, done.
+From https://github.com/Marouanelmzr/document-parsing
+   2d5b5ed..4253be4  main       -> origin/main
+Updating 2d5b5ed..4253be4
+Fast-forward
+ src/training/multi_lora_trainer.py | 2 +-
+ src/training/train.py              | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+(.venv) root@aafde635cae8:/document-parsing# bash src/training/smoke_test.sh
+========================================
+ Smoke Test - Invoice LoRA Training
+========================================
+Model         : Qwen/Qwen3-VL-4B-Instruct
+========================================
+
+NOTE: this run's model output is NOT tracked with DVC and will
+Requirement already satisfied: pip in ./.venv/lib/python3.12/site-packages (26.2.1)
+Requirement already satisfied: xgrammar>=0.1.11 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 6)) (0.2.8)
+Requirement already satisfied: dvc>=3.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 15)) (3.67.1)
+Requirement already satisfied: cachetools in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.0)
+Requirement already satisfied: psutil in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.2)
+Requirement already satisfied: blake3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.0.9)
+Requirement already satisfied: py-cpuinfo in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (9.0.0)
+Requirement already satisfied: safetensors>=0.6.2 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.8.0)
+Requirement already satisfied: fastapi<0.137.0,>=0.133.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0
+.12.0->-r requirements.txt (line 2)) (0.136.3)
+Requirement already satisfied: starlette>=1.0.1 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.7.0)
+Requirement already satisfied: aiohttp>=3.13.3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.14.3)
+Requirement already satisfied: openai>=2.25.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.19.2)
+Requirement already satisfied: prometheus_client>=0.18.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(0.26.0)
+Requirement already satisfied: prometheus-fastapi-instrumentator>=8.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements
+.txt (line 2)) (8.1.0)
+ (0.11.3)
+Requirement already satisfied: outlines_core==0.2.14 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.2
+)
+Requirement already satisfied: opencv-python-headless>=4.13.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line
+Requirement already satisfied: compressed-tensors==0.17.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+Requirement already satisfied: cloudpickle in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.1.2)
+Requirement already satisfied: mcp<3.0.0,>=2.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: opentelemetry-sdk>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(1.45.0)
+Requirement already satisfied: opentelemetry-api>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+.4)
+fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.0.32)
+Requirement already satisfied: email-validator>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12
+.0->-r requirements.txt (line 2)) (2.3.0)
+Requirement already satisfied: uvicorn>=0.12.0 in ./.venv/lib/python3.12/site-packages (from uvicorn[standard]>=0.12.0; extra == "standard"->fastap
+i[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.54.0)
+Requirement already satisfied: pydantic-settings>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.
+12.0->-r requirements.txt (line 2)) (2.15.0)
+Requirement already satisfied: pydantic-extra-types>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>
+=0.12.0->-r requirements.txt (line 2)) (4.15.1)
+Requirement already satisfied: certifi in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vll
+m>=0.12.0->-r requirements.txt (line 2)) (2026.7.22)
+Requirement already satisfied: idna in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vllm>=
+.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: httpx2>=2.5.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt (li
+ne 2)) (2.13.1)
+Requirement already satisfied: mcp-types==2.2.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt
+(line 2)) (2.2.0)
+Requirement already satisfied: sse-starlette>=3.0.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (3.4.11)
+Requirement already satisfied: jmespath in ./.venv/lib/python3.12/site-packages (from model-hosting-container-standards<1.0.0,>=0.1.14->vllm>=0.12.
+lm>=0.12.0->-r requirements.txt (line 2)) (4.3.0)
+Requirement already satisfied: typer in ./.venv/lib/python3.12/site-packages (from transformers>=4.57.0->-r requirements.txt (line 3)) (0.27.2)
+Requirement already satisfied: hf-xet<2.0.0,>=1.6.0 in ./.venv/lib/python3.12/site-packages (from huggingface_hub>=0.25.0->-r requirements.txt (lin
+e 12)) (1.6.0)
+Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (0
+.8.0)
+Requirement already satisfied: pydantic-core==2.46.5 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (2.
+46.5)
+Requirement already satisfied: attrs>=22.2.0 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (26.1.0)
+Requirement already satisfied: celery in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (5.6.3)
+Requirement already satisfied: colorama>=0.3.9 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (0.4.6)
+.0.10)
+Requirement already satisfied: billiard<5.0,>=4.2.1 in ./.venv/lib/python3.12/site-packages (from celery->dvc>=3.0->-r requirements.txt (line 15))
+(4.3.0)
+Requirement already satisfied: opentelemetry-exporter-otlp-proto-common==1.45.0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporte
+r-otlp-proto-grpc==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2)) (1.45.0)
+Requirement already satisfied: opentelemetry-proto==1.45.0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporter-otlp-proto-grpc==1.
+ttp-transport[urllib3]==0.66b0->opentelemetry-exporter-otlp-proto-http==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (0.66b0)
+Requirement already satisfied: opentelemetry-semantic-conventions==0.66b0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-sdk>=1.27.0->
+vllm>=0.12.0->-r requirements.txt (line 2)) (0.66b0)
+Requirement already satisfied: wcwidth>=0.1.4 in ./.venv/lib/python3.12/site-packages (from prompt_toolkit>=3.0.36->click-repl>=0.2.0->celery->dvc>
+=1.11.6->mistral_common[image]>=1.11.6->vllm>=0.12.0->-r requirements.txt (line 2)) (26.2.16)
+Requirement already satisfied: mdurl~=0.1 in ./.venv/lib/python3.12/site-packages (from markdown-it-py>=2.2.0->rich>=12->dvc>=3.0->-r requirements.
+txt (line 15)) (0.1.2)
+ine 3)) (1.5.4)
+Requirement already satisfied: uvloop>=0.15.1 in ./.venv/lib/python3.12/site-packages (from uvicorn[standard]>=0.12.0; extra == "standard"->fastapi
+[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.22.1)
+Requirement already satisfied: nvidia-nvvm in ./.venv/lib/python3.12/site-packages (from nvidia-cuda-nvcc->humming-kernels[cu13]==0.1.12->vllm>=0.1
+Checking model repo is reachable on Hugging Face Hub...
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/document-parsing/src/training/train.py", line 39, in <module>
+    from src.training.multi_lora_trainer import MultiLoRATrainer, TrainConfig
+  File "/document-parsing/src/training/multi_lora_trainer.py", line 50, in <module>
+    from lora_trials import TrialConfig
+ModuleNotFoundError: No module named 'lora_trials'
+(.venv) root@aafde635cae8:/document-parsing# git pull
+remote: Enumerating objects: 9, done.
+remote: Counting objects: 100% (9/9), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 5 (delta 4), reused 5 (delta 4), pack-reused 0 (from 0)
+Unpacking objects: 100% (5/5), 407 bytes | 407.00 KiB/s, done.
+From https://github.com/Marouanelmzr/document-parsing
+   4253be4..6d2deb8  main       -> origin/main
+Updating 4253be4..6d2deb8
+Fast-forward
+ src/training/multi_lora_trainer.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+(.venv) root@aafde635cae8:/document-parsing# bash src/training/smoke_test.sh
+========================================
+ Smoke Test - Invoice LoRA Training
+========================================
+Model         : Qwen/Qwen3-VL-4B-Instruct
+========================================
+
+NOTE: this run's model output is NOT tracked with DVC and will
+Requirement already satisfied: pip in ./.venv/lib/python3.12/site-packages (26.2.1)
+Requirement already satisfied: xgrammar>=0.1.11 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 6)) (0.2.8)
+Requirement already satisfied: dvc>=3.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 15)) (3.67.1)
+Requirement already satisfied: cachetools in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.0)
+Requirement already satisfied: psutil in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (7.2.2)
+Requirement already satisfied: blake3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.0.9)
+Requirement already satisfied: py-cpuinfo in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (9.0.0)
+Requirement already satisfied: safetensors>=0.6.2 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.8.0)
+Requirement already satisfied: fastapi<0.137.0,>=0.133.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0
+.12.0->-r requirements.txt (line 2)) (0.136.3)
+Requirement already satisfied: starlette>=1.0.1 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (1.7.0)
+Requirement already satisfied: aiohttp>=3.13.3 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.14.3)
+Requirement already satisfied: openai>=2.25.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.19.2)
+Requirement already satisfied: prometheus_client>=0.18.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(0.26.0)
+Requirement already satisfied: prometheus-fastapi-instrumentator>=8.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements
+.txt (line 2)) (8.1.0)
+ (0.11.3)
+Requirement already satisfied: outlines_core==0.2.14 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (0.2
+)
+Requirement already satisfied: opencv-python-headless>=4.13.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line
+Requirement already satisfied: compressed-tensors==0.17.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+Requirement already satisfied: cloudpickle in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (3.1.2)
+Requirement already satisfied: mcp<3.0.0,>=2.0.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: opentelemetry-sdk>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+(1.45.0)
+Requirement already satisfied: opentelemetry-api>=1.27.0 in ./.venv/lib/python3.12/site-packages (from vllm>=0.12.0->-r requirements.txt (line 2))
+.4)
+fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.0.32)
+Requirement already satisfied: email-validator>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.12
+.0->-r requirements.txt (line 2)) (2.3.0)
+Requirement already satisfied: uvicorn>=0.12.0 in ./.venv/lib/python3.12/site-packages (from uvicorn[standard]>=0.12.0; extra == "standard"->fastap
+i[standard]<0.137.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.54.0)
+Requirement already satisfied: pydantic-settings>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>=0.
+12.0->-r requirements.txt (line 2)) (2.15.0)
+Requirement already satisfied: pydantic-extra-types>=2.0.0 in ./.venv/lib/python3.12/site-packages (from fastapi[standard]<0.137.0,>=0.133.0->vllm>
+=0.12.0->-r requirements.txt (line 2)) (4.15.1)
+Requirement already satisfied: certifi in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vll
+m>=0.12.0->-r requirements.txt (line 2)) (2026.7.22)
+Requirement already satisfied: idna in ./.venv/lib/python3.12/site-packages (from httpx<1.0.0,>=0.23.0->fastapi[standard]<0.137.0,>=0.133.0->vllm>=
+.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: httpx2>=2.5.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt (li
+ne 2)) (2.13.1)
+Requirement already satisfied: mcp-types==2.2.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.txt
+(line 2)) (2.2.0)
+Requirement already satisfied: sse-starlette>=3.0.0 in ./.venv/lib/python3.12/site-packages (from mcp<3.0.0,>=2.0.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (3.4.11)
+Requirement already satisfied: jmespath in ./.venv/lib/python3.12/site-packages (from model-hosting-container-standards<1.0.0,>=0.1.14->vllm>=0.12.
+lm>=0.12.0->-r requirements.txt (line 2)) (4.3.0)
+Requirement already satisfied: typer in ./.venv/lib/python3.12/site-packages (from transformers>=4.57.0->-r requirements.txt (line 3)) (0.27.2)
+Requirement already satisfied: hf-xet<2.0.0,>=1.6.0 in ./.venv/lib/python3.12/site-packages (from huggingface_hub>=0.25.0->-r requirements.txt (lin
+e 12)) (1.6.0)
+Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (0
+.8.0)
+Requirement already satisfied: pydantic-core==2.46.5 in ./.venv/lib/python3.12/site-packages (from pydantic>=2.0->-r requirements.txt (line 9)) (2.
+46.5)
+Requirement already satisfied: attrs>=22.2.0 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (26.1.0)
+Requirement already satisfied: celery in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (5.6.3)
+Requirement already satisfied: colorama>=0.3.9 in ./.venv/lib/python3.12/site-packages (from dvc>=3.0->-r requirements.txt (line 15)) (0.4.6)
+.0.10)
+Requirement already satisfied: billiard<5.0,>=4.2.1 in ./.venv/lib/python3.12/site-packages (from celery->dvc>=3.0->-r requirements.txt (line 15))
+(4.3.0)
+Requirement already satisfied: opentelemetry-exporter-otlp-proto-common==1.45.0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporte
+r-otlp-proto-grpc==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2)) (1.45.0)
+Requirement already satisfied: opentelemetry-proto==1.45.0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporter-otlp-proto-grpc==1.
+45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.txt (line 2)) (1.45.0)
+Requirement already satisfied: opentelemetry-exporter-http-transport==0.66b0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-exporter-h
+ttp-transport[urllib3]==0.66b0->opentelemetry-exporter-otlp-proto-http==1.45.0->opentelemetry-exporter-otlp>=1.27.0->vllm>=0.12.0->-r requirements.
+txt (line 2)) (0.66b0)
+Requirement already satisfied: opentelemetry-semantic-conventions==0.66b0 in ./.venv/lib/python3.12/site-packages (from opentelemetry-sdk>=1.27.0->
+vllm>=0.12.0->-r requirements.txt (line 2)) (0.66b0)
+Requirement already satisfied: wcwidth>=0.1.4 in ./.venv/lib/python3.12/site-packages (from prompt_toolkit>=3.0.36->click-repl>=0.2.0->celery->dvc>
+=1.11.6->mistral_common[image]>=1.11.6->vllm>=0.12.0->-r requirements.txt (line 2)) (26.2.16)
+Requirement already satisfied: python-dotenv>=0.21.0 in ./.venv/lib/python3.12/site-packages (from pydantic-settings>=2.0.0->fastapi[standard]<0.13
+7.0,>=0.133.0->vllm>=0.12.0->-r requirements.txt (line 2)) (1.2.3)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.12/site-packages (from requests>=2.26.0->vllm>=0.12.0->-r requiremen
+ts.txt (line 2)) (3.5.1)
+Requirement already satisfied: markdown-it-py>=2.2.0 in ./.venv/lib/python3.12/site-packages (from rich>=12->dvc>=3.0->-r requirements.txt (line 15
+)) (4.2.0)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.venv/lib/python3.12/site-packages (from rich>=12->dvc>=3.0->-r requirements.txt (line
+15)) (2.21.0)
+Requirement already satisfied: mdurl~=0.1 in ./.venv/lib/python3.12/site-packages (from markdown-it-py>=2.2.0->rich>=12->dvc>=3.0->-r requirements.
+txt (line 15)) (0.1.2)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.12/site-packages (from sympy>=1.13.3->torch>=2.5.0->-r requirements.txt (l
+ine 20)) (1.3.0)
+Requirement already satisfied: shellingham>=1.3.0 in ./.venv/lib/python3.12/site-packages (from typer->transformers>=4.57.0->-r requirements.txt (l
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in ./.venv/lib/python3.12/site-packages (from ri
+ch>=12->dvc>=3.0->-r requirements.txt (line 15)) (2.21.0)                                              ch>=12->dvc>=3.0->-r requirements.txt (line
+Requirement already satisfied: mdurl~=0.1 in ./.venv/lib/python3.12/site-packages (from markdown-it-py>
+=2.2.0->rich>=12->dvc>=3.0->-r requirements.txt (line 15)) (0.1.2)                                     =2.2.0->rich>=12->dvc>=3.0->-r requirements.
+.2.0->rich>=12->dvc>=3.0->-r requirements.txt (line 15)) (0.1.2)                                     >=
+y>=2.2.0->rich>=12->dvc>=3.0->-r requirements.txt (line 15)) (0.1.2)     12/site-packages (from sympy  1.13.3->torch>=2.5.0->-r requirements.txt (l
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.                            ->
+12/site-packages (from sympy>=1.13.3->torch>=2.5.0->-r requirements.txt (12/site-packages (from typer  transformers>=4.57.0->-r requirements.txt (l
+line 20)) (1.3.0)                                                                                    [s
+Requirement already satisfied: shellingham>=1.3.0 in ./.venv/lib/python3./site-packages (from uvicornentandard]>=0.12.0; extra == "standard"->fasta
+12/site-packages (from typer->transformers>=4.57.0->-r requirements.txt (3.0->vllm>=0.12.0->-r requir
+line 3)) (1.5.4)                                                                                     tandard]>=0.12.0; extra == "standard"->fastapi
+Requirement already satisfied: httptools>=0.8.0 in ./.venv/lib/python3.12ite-packages (from uvicorn[sts
+py>=2.2.0->rich>=12->dvc>=3.0->-r requirements.txt (line 15)) (0.1.2)    0->vllm>=0.12.0->-r requirem  tandard]>=0.12.0; extra == "standard"->fasta
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.                            [s
+12/site-packages (from sympy>=1.13.3->torch>=2.5.0->-r requirements.txt (/site-packages (from uvicornencc->humming-kernels[cu13]==0.1.12->vllm>=0.1
+line 20)) (1.3.0)                                                        3.0->vllm>=0.12.0->-r requir
+Requirement already satisfied: shellingham>=1.3.0 in ./.venv/lib/python3.                            nva-nvcc->humming-kernels[cu13]==0.1.12->vllm>
+12/site-packages (from typer->transformers>=4.57.0->-r requirements.txt (-packages (from nvidia-cuda-
+line 3)) (1.5.4)                                                         ine 2)) (13.4.92)           ud
+Requirement already satisfied: httptools>=0.8.0 in ./.venv/lib/python3.12site-packages (from nvidia-c
+Requirement already satisfied: httptools>=0.8.0 in ./.venv/lib/python3.12t (line 2)) (13.4.92)
+txt (line 2)) (13.4.92)[3/6] Preflight checks...
+  OK   Qwen/Qwen3-VL-4B-Instruct[4/6] Running smoke test (50 steps, mode=plora)...
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Fetching 2 files: 100%|__________| 2/2 [00:16<00:00,  8.45s/it]Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/torch/nn/modules/module.p
+y", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/transformers/utils/generi
+c.py", line 939, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/transformers/models/qwen3
+_vl/modeling_qwen3_vl.py", line 1361, in forward
+    outputs = self.model(
+              ^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/torch/nn/modules/module.p
+y", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/torch/nn/modules/module.p
+y", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/transformers/utils/generi
+c.py", line 939, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/transformers/models/qwen3
+_vl/modeling_qwen3_vl.py", line 1228, in forward
+    position_ids = self.compute_3d_position_ids(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/document-parsing/.venv/lib/python3.12/site-packages/transformers/models/qwen3
+_vl/modeling_qwen3_vl.py", line 1118, in compute_3d_position_ids
+    raise ValueError(
+ValueError: Multimodal data was passed (via `image_grid_thw` or `video_grid_thw`) but
+`mm_token_type_ids` is missing. Please pass `mm_token_type_ids` to the model so that m
+ultimodal RoPE (M-RoPE) can be computed correctly. `mm_token_type_ids` is returned by
+the processor alongside `input_ids`.
+(.venv) root@aafde635cae8:/document-parsing#[train] 0:bash*                                         "aafde635cae8" 18:53 27-Sep-26

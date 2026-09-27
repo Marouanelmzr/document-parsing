@@ -137,12 +137,14 @@ class InvoiceVLDataset(Dataset):
             text=[full_text], images=[image], return_tensors="pt")
 
         input_ids = full_enc["input_ids"][0][: self.max_length]
+        mm_token_type_ids = full_enc["mm_token_type_ids"][0][: self.max_length]
         labels = input_ids.clone()
         labels[:min(prompt_len, len(labels))] = -100
 
         item = {
             "input_ids": input_ids,
             "labels": labels,
+            "mm_token_type_ids": mm_token_type_ids,
             "pixel_values": full_enc["pixel_values"],
             "image_grid_thw": full_enc["image_grid_thw"],
         }
