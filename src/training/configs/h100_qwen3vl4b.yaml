@@ -12,7 +12,7 @@ model_id: Qwen/Qwen3-VL-4B-Instruct
 max_length: 4096          # matches configs.py's max_model_len for this task
 
 # Dataloading
-micro_batch_size: 6       # start here; watch nvidia-smi and raise toward 8-10
+micro_batch_size: 8       # start here; watch nvidia-smi and raise toward 8-10
                             # if peak VRAM stays well under 80GB (invoice pages
                             # are usually well under the configured 2048-token
                             # image cap, so there's often headroom)
@@ -23,7 +23,7 @@ num_workers: 8             # CPU workers doing PIL decode + processor calls;
                             # already pinned near 100%
 
 # P-LoRA sweep (see lora_trials.py for the actual hyperparameter grid)
-total_steps: 2000          # optimizer steps; ~2000*24 = 48k images seen
+total_steps: 1500          # optimizer steps; ~2000*24 = 48k images seen
 eval_every: 100
 rungs: [0.25, 0.5, 0.75]   # prune bottom (1-keep_fraction) of live trials here
 keep_fraction: 0.5         # halve the population at each rung (ASHA-style)
