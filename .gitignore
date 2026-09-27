@@ -3,3 +3,4 @@
 __pycache__/
 /benchmark_results
 /benchmark_results_full
+/bench_out

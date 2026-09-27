@@ -21,6 +21,69 @@ TS_SCHEMA = """type Address = {
   street_number: string | null;
   street_name: string | null;
   po_box: string | null;
+  address_complement: string | null;
+  city: string | null;
+  postal_code: string | null;
+  state: string | null;
+  country: string | null;
+};
+
+type Locale = {
+  language: string | null;
+  country: string | null;
+  currency: string | null;
+};
+
+type Tax = {
+  rate: number | null;
+  base: number | null;
+  amount: number | null;
+};
+
+type LineItem = {
+  description: string | null;
+  quantity: number | null;
+  unit_price: number | null;
+  total_price: number | null;
+  tax_amount: number | null;
+  tax_rate: number | null;
+  unit_measure: string | null;
+};
+
+type Discount = {
+  rate: number | null;
+  amount: number | null;
+};
+
+type Invoice = {
+  fields: {
+    supplier_name: string | null;
+    supplier_phone_number: string | null;
+    supplier_address: Address | null;
+    customer_name: string | null;
+    customer_phone_number: string | null;
+    customer_address: Address | null;
+    invoice_number: string | null;
+    document_type: "invoice" | "tax_invoice" | null;
+    date: string | null;
+    due_date: string | null;
+    period: string | null;
+    locale: Locale | null;
+    total_net: number | null; 
+    total_tax: number | null;
+    total_amount: number | null;
+    taxes: Tax[];
+    discount: Discount | null;
+    line_items: LineItem[];
+  };
+};"""
+
+
+TS_SCHEMA_ANNOTATE_TEACHER = """type Address = {
+  address: string | null;
+  street_number: string | null;
+  street_name: string | null;
+  po_box: string | null;
   address_complement: string | null; // e.g. floor/building/suite
   city: string | null;
   postal_code: string | null;
@@ -79,6 +142,13 @@ type Invoice = {
 };"""
 
 VISION_CHAT_PROMPT = f"""You are an information-extraction engine for invoice images. Read the attached invoice image and extract every field you can find.
+
+Extract fields matching this shape (null when a field isn't found, [] for empty lists):
+
+{TS_SCHEMA}
+"""
+
+VISION_CHAT_PROMPT_ANNOTATE_TEACHER = f"""You are an information-extraction engine for invoice images. Read the attached invoice image and extract every field you can find.
 
 Extract fields matching this shape (null when a field isn't found, [] for empty lists):
 

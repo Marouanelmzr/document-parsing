@@ -1,0 +1,43 @@
+# Reference config for `python train.py --mode plora`.
+# train.py takes these as CLI flags (see its --help); this file documents a
+# recommended starting point for a single H100 80-94GB running Qwen3-VL-4B
+# with max_length=4096 (matching src/benchmark/configs.py's max_model_len).
+#
+# Not auto-loaded -- pass the equivalent flags directly, e.g.:
+#   python train.py --micro-batch-size 6 --grad-accum-steps 4 \
+#       --total-steps 2000 --eval-every 100 --rungs 0.25 0.5 0.75 \
+#       --keep-fraction 0.5 --num-workers 8 ...
+
+model_id: Qwen/Qwen3-VL-4B-Instruct
+max_length: 4096          # matches configs.py's max_model_len for this task
+
+# Dataloading
+micro_batch_size: 6       # start here; watch nvidia-smi and raise toward 8-10
+                            # if peak VRAM stays well under 80GB (invoice pages
+                            # are usually well under the configured 2048-token
+                            # image cap, so there's often headroom)
+grad_accum_steps: 4        # effective batch = 24 images/optimizer-step
+num_workers: 8             # CPU workers doing PIL decode + processor calls;
+                            # raise if `nvidia-smi dmon` shows GPU utilization
+                            # dipping between steps (data-starved), not if it's
+                            # already pinned near 100%
+
+# P-LoRA sweep (see lora_trials.py for the actual hyperparameter grid)
+total_steps: 2000          # optimizer steps; ~2000*24 = 48k images seen
+eval_every: 100
+rungs: [0.25, 0.5, 0.75]   # prune bottom (1-keep_fraction) of live trials here
+keep_fraction: 0.5         # halve the population at each rung (ASHA-style)
+final_eval_examples: 40    # generate()-based field-accuracy on survivors only
+
+# Notes on H100 80-94GB budget:
+#   - frozen bf16 backbone:            ~8 GB  (loaded once, shared by all trials)
+#   - activations (per micro-batch):   dominant cost, scales with
+#                                       micro_batch_size * seq_len; gradient
+#                                       checkpointing trades this for ~30%
+#                                       more compute per step -- worth it here
+#                                       since VRAM, not FLOPs, is the limit
+#   - LoRA params + AdamW state:       tens of MB per trial -- 5 concurrent
+#                                       trials (lora_trials.default_trials())
+#                                       cost well under 1 GB combined
+#   - KV-cache during final .generate() eval: freed between trials, only the
+#                                       active adapter's survivors run it

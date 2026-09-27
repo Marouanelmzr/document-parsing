@@ -1,0 +1,272 @@
+qwen4b          docs=200 fields=12588 accuracy=0.8633
+               macro_doc=0.8618
+  customer_address.address                91/200 0.4550
+  customer_address.address_complement    168/200 0.8400
+  customer_address.city                  169/200 0.8450
+  customer_address.country               198/200 0.9900
+  customer_address.po_box                198/199 0.9950
+  customer_address.postal_code            80/200 0.4000
+  customer_address.state                  95/200 0.4750
+  customer_address.street_name           178/200 0.8900
+  customer_address.street_number         181/200 0.9050
+  customer_name                          194/200 0.9700
+  customer_phone_number                   62/200 0.3100
+  date                                   200/200 1.0000
+  discount                               152/152 1.0000
+  discount.amount                         47/ 48 0.9792
+  discount.rate                           34/ 48 0.7083
+  document_type                          161/200 0.8050
+  due_date                               194/200 0.9700
+  invoice_number                         197/200 0.9850
+  line_items._count_match                199/200 0.9950
+  line_items[0].description              196/200 0.9800
+  line_items[0].quantity                 200/200 1.0000
+  line_items[0].tax_amount               200/200 1.0000
+  line_items[0].tax_rate                 198/200 0.9900
+  line_items[0].total_price              168/200 0.8400
+  line_items[0].unit_measure             194/200 0.9700
+  line_items[0].unit_price               199/200 0.9950
+  line_items[1].description              195/200 0.9750
+  line_items[1].quantity                 200/200 1.0000
+  line_items[1].tax_amount               200/200 1.0000
+  line_items[1].tax_rate                 198/200 0.9900
+  line_items[1].total_price              164/200 0.8200
+  line_items[1].unit_measure             194/200 0.9700
+  line_items[1].unit_price               197/200 0.9850
+  line_items[2].description              150/153 0.9804
+  line_items[2].quantity                 153/153 1.0000
+  line_items[2].tax_amount               153/153 1.0000
+  line_items[2].tax_rate                 151/153 0.9869
+  line_items[2].total_price              125/153 0.8170
+  line_items[2].unit_measure             149/153 0.9739
+  line_items[2].unit_price               150/153 0.9804
+  line_items[3].description              105/106 0.9906
+  line_items[3].quantity                 105/106 0.9906
+  line_items[3].tax_amount               105/106 0.9906
+  line_items[3].tax_rate                 106/106 1.0000
+  line_items[3].total_price               86/106 0.8113
+  line_items[3].unit_measure             103/106 0.9717
+  line_items[3].unit_price               103/106 0.9717
+  line_items[4].description               49/ 50 0.9800
+  line_items[4].quantity                  50/ 50 1.0000
+  line_items[4].tax_amount                50/ 50 1.0000
+  line_items[4].tax_rate                  50/ 50 1.0000
+  line_items[4].total_price               42/ 50 0.8400
+  line_items[4].unit_measure              48/ 50 0.9600
+  line_items[4].unit_price                50/ 50 1.0000
+  locale.country                         194/200 0.9700
+  locale.currency                        172/200 0.8600
+  locale.language                        102/200 0.5100
+  period                                 200/200 1.0000
+  supplier_address.address                90/200 0.4500
+  supplier_address.address_complement    171/200 0.8550
+  supplier_address.city                  166/200 0.8300
+  supplier_address.country               170/200 0.8500
+  supplier_address.po_box                200/200 1.0000
+  supplier_address.postal_code            77/200 0.3850
+  supplier_address.state                  76/200 0.3800
+  supplier_address.street_name           169/200 0.8450
+  supplier_address.street_number         163/200 0.8150
+  supplier_name                          183/200 0.9150
+  supplier_phone_number                  188/200 0.9400
+  taxes._count_match                     190/200 0.9500
+  taxes[0].amount                         93/101 0.9208
+  taxes[0].base                           88/101 0.8713
+  taxes[0].rate                           67/101 0.6634
+  taxes[1].amount                          5/ 11 0.4545
+  taxes[1].base                            7/ 11 0.6364
+  taxes[1].rate                            5/ 11 0.4545
+  taxes[2].amount                          4/  5 0.8000
+  taxes[2].base                            4/  5 0.8000
+  taxes[2].rate                            4/  5 0.8000
+  taxes[3].amount                          4/  5 0.8000
+  taxes[3].base                            4/  5 0.8000
+  taxes[3].rate                            4/  5 0.8000
+  taxes[4].amount                          4/  4 1.0000
+  taxes[4].base                            3/  4 0.7500
+  taxes[4].rate                            4/  4 1.0000
+  total_amount                           166/200 0.8300
+  total_net                              129/200 0.6450
+  total_tax                              177/200 0.8850
+qwen2b          docs=200 fields=12588 accuracy=0.7194
+               macro_doc=0.7186
+  customer_address.address                87/200 0.4350
+  customer_address.address_complement    119/200 0.5950
+  customer_address.city                  142/200 0.7100
+  customer_address.country               181/200 0.9050
+  customer_address.po_box                199/199 1.0000
+  customer_address.postal_code            97/200 0.4850
+  customer_address.state                 102/200 0.5100
+  customer_address.street_name           132/200 0.6600
+  customer_address.street_number         130/200 0.6500
+  customer_name                          181/200 0.9050
+  customer_phone_number                   28/200 0.1400
+  date                                   200/200 1.0000
+  discount                               152/152 1.0000
+  discount.amount                         48/ 48 1.0000
+  discount.rate                           26/ 48 0.5417
+  document_type                          158/200 0.7900
+  due_date                               192/200 0.9600
+  invoice_number                         191/200 0.9550
+  line_items._count_match                196/200 0.9800
+  line_items[0].description              196/200 0.9800
+  line_items[0].quantity                 200/200 1.0000
+  line_items[0].tax_amount                43/200 0.2150
+  line_items[0].tax_rate                  42/200 0.2100
+  line_items[0].total_price              195/200 0.9750
+  line_items[0].unit_measure             195/200 0.9750
+  line_items[0].unit_price               199/200 0.9950
+  line_items[1].description              195/200 0.9750
+  line_items[1].quantity                 198/200 0.9900
+  line_items[1].tax_amount                45/200 0.2250
+  line_items[1].tax_rate                  44/200 0.2200
+  line_items[1].total_price              188/200 0.9400
+  line_items[1].unit_measure             196/200 0.9800
+  line_items[1].unit_price               196/200 0.9800
+  line_items[2].description              150/153 0.9804
+  line_items[2].quantity                 153/153 1.0000
+  line_items[2].tax_amount                34/153 0.2222
+  line_items[2].tax_rate                  33/153 0.2157
+  line_items[2].total_price              142/153 0.9281
+  line_items[2].unit_measure             151/153 0.9869
+  line_items[2].unit_price               149/153 0.9739
+  line_items[3].description              105/106 0.9906
+  line_items[3].quantity                 105/106 0.9906
+  line_items[3].tax_amount                27/106 0.2547
+  line_items[3].tax_rate                  28/106 0.2642
+  line_items[3].total_price              101/106 0.9528
+  line_items[3].unit_measure             105/106 0.9906
+  line_items[3].unit_price               104/106 0.9811
+  line_items[4].description               48/ 50 0.9600
+  line_items[4].quantity                  49/ 50 0.9800
+  line_items[4].tax_amount                14/ 50 0.2800
+  line_items[4].tax_rate                  14/ 50 0.2800
+  line_items[4].total_price               46/ 50 0.9200
+  line_items[4].unit_measure              49/ 50 0.9800
+  line_items[4].unit_price                48/ 50 0.9600
+  locale.country                          85/200 0.4250
+  locale.currency                        150/200 0.7500
+  locale.language                          4/200 0.0200
+  period                                 200/200 1.0000
+  supplier_address.address                89/200 0.4450
+  supplier_address.address_complement    136/200 0.6800
+  supplier_address.city                  125/200 0.6250
+  supplier_address.country               157/200 0.7850
+  supplier_address.po_box                200/200 1.0000
+  supplier_address.postal_code           115/200 0.5750
+  supplier_address.state                 102/200 0.5100
+  supplier_address.street_name           117/200 0.5850
+  supplier_address.street_number         100/200 0.5000
+  supplier_name                          160/200 0.8000
+  supplier_phone_number                  175/200 0.8750
+  taxes._count_match                     119/200 0.5950
+  taxes[0].amount                         94/101 0.9307
+  taxes[0].base                           73/101 0.7228
+  taxes[0].rate                           58/101 0.5743
+  taxes[1].amount                          5/ 11 0.4545
+  taxes[1].base                            7/ 11 0.6364
+  taxes[1].rate                            5/ 11 0.4545
+  taxes[2].amount                          4/  5 0.8000
+  taxes[2].base                            4/  5 0.8000
+  taxes[2].rate                            4/  5 0.8000
+  taxes[3].amount                          4/  5 0.8000
+  taxes[3].base                            4/  5 0.8000
+  taxes[3].rate                            4/  5 0.8000
+  taxes[4].amount                          4/  4 1.0000
+  taxes[4].base                            3/  4 0.7500
+  taxes[4].rate                            4/  4 1.0000
+  total_amount                           146/200 0.7300
+  total_net                              126/200 0.6300
+  total_tax                              125/200 0.6250
+test_gt         docs=200 fields=12588 accuracy=1.0000
+               macro_doc=1.0000
+  customer_address.address               200/200 1.0000
+  customer_address.address_complement    200/200 1.0000
+  customer_address.city                  200/200 1.0000
+  customer_address.country               200/200 1.0000
+  customer_address.po_box                199/199 1.0000
+  customer_address.postal_code           200/200 1.0000
+  customer_address.state                 200/200 1.0000
+  customer_address.street_name           200/200 1.0000
+  customer_address.street_number         200/200 1.0000
+  customer_name                          200/200 1.0000
+  customer_phone_number                  200/200 1.0000
+  date                                   200/200 1.0000
+  discount                               152/152 1.0000
+  discount.amount                         48/ 48 1.0000
+  discount.rate                           48/ 48 1.0000
+  document_type                          200/200 1.0000
+  due_date                               200/200 1.0000
+  invoice_number                         200/200 1.0000
+  line_items._count_match                200/200 1.0000
+  line_items[0].description              200/200 1.0000
+  line_items[0].quantity                 200/200 1.0000
+  line_items[0].tax_amount               200/200 1.0000
+  line_items[0].tax_rate                 200/200 1.0000
+  line_items[0].total_price              200/200 1.0000
+  line_items[0].unit_measure             200/200 1.0000
+  line_items[0].unit_price               200/200 1.0000
+  line_items[1].description              200/200 1.0000
+  line_items[1].quantity                 200/200 1.0000
+  line_items[1].tax_amount               200/200 1.0000
+  line_items[1].tax_rate                 200/200 1.0000
+  line_items[1].total_price              200/200 1.0000
+  line_items[1].unit_measure             200/200 1.0000
+  line_items[1].unit_price               200/200 1.0000
+  line_items[2].description              153/153 1.0000
+  line_items[2].quantity                 153/153 1.0000
+  line_items[2].tax_amount               153/153 1.0000
+  line_items[2].tax_rate                 153/153 1.0000
+  line_items[2].total_price              153/153 1.0000
+  line_items[2].unit_measure             153/153 1.0000
+  line_items[2].unit_price               153/153 1.0000
+  line_items[3].description              106/106 1.0000
+  line_items[3].quantity                 106/106 1.0000
+  line_items[3].tax_amount               106/106 1.0000
+  line_items[3].tax_rate                 106/106 1.0000
+  line_items[3].total_price              106/106 1.0000
+  line_items[3].unit_measure             106/106 1.0000
+  line_items[3].unit_price               106/106 1.0000
+  line_items[4].description               50/ 50 1.0000
+  line_items[4].quantity                  50/ 50 1.0000
+  line_items[4].tax_amount                50/ 50 1.0000
+  line_items[4].tax_rate                  50/ 50 1.0000
+  line_items[4].total_price               50/ 50 1.0000
+  line_items[4].unit_measure              50/ 50 1.0000
+  line_items[4].unit_price                50/ 50 1.0000
+  locale.country                         200/200 1.0000
+  locale.currency                        200/200 1.0000
+  locale.language                        200/200 1.0000
+  period                                 200/200 1.0000
+  supplier_address.address               200/200 1.0000
+  supplier_address.address_complement    200/200 1.0000
+  supplier_address.city                  200/200 1.0000
+  supplier_address.country               200/200 1.0000
+  supplier_address.po_box                200/200 1.0000
+  supplier_address.postal_code           200/200 1.0000
+  supplier_address.state                 200/200 1.0000
+  supplier_address.street_name           200/200 1.0000
+  supplier_address.street_number         200/200 1.0000
+  supplier_name                          200/200 1.0000
+  supplier_phone_number                  200/200 1.0000
+  taxes._count_match                     200/200 1.0000
+  taxes[0].amount                        101/101 1.0000
+  taxes[0].base                          101/101 1.0000
+  taxes[0].rate                          101/101 1.0000
+  taxes[1].amount                         11/ 11 1.0000
+  taxes[1].base                           11/ 11 1.0000
+  taxes[1].rate                           11/ 11 1.0000
+  taxes[2].amount                          5/  5 1.0000
+  taxes[2].base                            5/  5 1.0000
+  taxes[2].rate                            5/  5 1.0000
+  taxes[3].amount                          5/  5 1.0000
+  taxes[3].base                            5/  5 1.0000
+  taxes[3].rate                            5/  5 1.0000
+  taxes[4].amount                          4/  4 1.0000
+  taxes[4].base                            4/  4 1.0000
+  taxes[4].rate                            4/  4 1.0000
+  total_amount                           200/200 1.0000
+  total_net                              200/200 1.0000
+  total_tax                              200/200 1.0000
+
+Saved: /content/bench_out/evaluation.json

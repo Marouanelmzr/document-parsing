@@ -1,0 +1,6 @@
+outs:
+- md5: 612f1c9a5cf868fcd753c9b41adaad67.dir
+  size: 8653185
+  nfiles: 803
+  hash: md5
+  path: bench_out

@@ -1,0 +1,9 @@
+# Additional deps for training, on top of the repo's own requirements.txt
+# (which already covers transformers/accelerate/Pillow for inference).
+torch>=2.5.0
+peft>=0.14.0
+datasets>=3.0.0
+
+# Optional but strongly recommended on H100 for attention throughput/memory.
+# If the build fails in your environment, train.py falls back to sdpa.
+flash-attn>=2.6.0 --no-build-isolation
