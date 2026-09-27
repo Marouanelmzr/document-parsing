@@ -34,9 +34,9 @@ import torch
 from torch.utils.data import DataLoader
 from transformers import AutoModelForImageTextToText, AutoProcessor
 
-from dataset import InvoiceVLDataset, LengthGroupedSampler, make_collate_fn
-from lora_trials import default_trials
-from multi_lora_trainer import MultiLoRATrainer, TrainConfig
+from src.training.dataset import InvoiceVLDataset, LengthGroupedSampler, make_collate_fn
+from src.training.lora_trials import default_trials
+from src.training.multi_lora_trainer import MultiLoRATrainer, TrainConfig
 
 
 def build_loaders(args, processor):

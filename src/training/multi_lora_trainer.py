@@ -48,7 +48,7 @@ from torch.optim import AdamW
 from transformers import get_cosine_schedule_with_warmup
 
 from lora_trials import TrialConfig
-from metrics import field_accuracy, safe_parse
+from src.training.metrics import field_accuracy, safe_parse
 
 
 
