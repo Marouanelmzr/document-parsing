@@ -32,7 +32,7 @@ from torch.utils.data import Dataset, Sampler
 
 # Reuse the repo's own prompt/schema so training data is byte-identical to
 # what the benchmark/inference path sends the model.
-_REPO_SRC = Path(__file__).resolve().parents[1] / "src" / "benchmark"
+_REPO_SRC = Path(__file__).resolve().parents[2] / "src" / "benchmark"
 sys.path.insert(0, str(_REPO_SRC))
 from src.benchmark.adapters import VISION_CHAT_PROMPT  # noqa: E402
 

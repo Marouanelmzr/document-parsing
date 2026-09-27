@@ -16,3 +16,11 @@ dvc>=3.0
 # Remote is DagsHub over HTTPS (.dvc/config). Plain `dvc` should cover an
 # HTTP(S) remote; if `dvc pull`/`dvc push` complain about a missing s3
 # backend, switch this line to `dvc[s3]` instead.
+
+torch>=2.5.0
+peft>=0.14.0
+datasets>=3.0.0
+
+# Optional but strongly recommended on H100 for attention throughput/memory.
+# If the build fails in your environment, train.py falls back to sdpa.
+flash-attn>=2.6.0 --no-build-isolation
