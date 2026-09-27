@@ -105,8 +105,6 @@ echo ""
 echo "[1/6] Installing dependencies..."
 
 python -m pip install -r requirements.txt
-pip install "flash-attn>=2.6.0" --no-build-isolation
-
 
 # ============================================================
 # 2. Pull dataset
