@@ -204,6 +204,7 @@ def make_collate_fn(pad_token_id: int):
         input_ids = torch.full((B, max_len), pad_token_id, dtype=torch.long)
         attention_mask = torch.zeros((B, max_len), dtype=torch.long)
         labels = torch.full((B, max_len), -100, dtype=torch.long)
+        mm_token_type_ids = torch.zeros((B, max_len), dtype=torch.long)
 
         for i, item in enumerate(items):
             L = item["input_ids"].shape[0]
@@ -212,6 +213,7 @@ def make_collate_fn(pad_token_id: int):
             input_ids[i, :L] = item["input_ids"]
             attention_mask[i, :L] = 1
             labels[i, :L] = item["labels"]
+            mm_token_type_ids[i, :L] = item["mm_token_type_ids"] 
 
         # pixel_values / image_grid_thw: Qwen concatenates patches across
         # every image in the batch (no padding needed at all here -- this
@@ -223,6 +225,7 @@ def make_collate_fn(pad_token_id: int):
             "input_ids": input_ids,
             "attention_mask": attention_mask,
             "labels": labels,
+            "mm_token_type_ids": mm_token_type_ids,
             "pixel_values": pixel_values,
             "image_grid_thw": image_grid_thw,
         }
