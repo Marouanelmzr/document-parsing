@@ -27,7 +27,7 @@ total_steps: 1500          # optimizer steps; ~2000*24 = 48k images seen
 eval_every: 100
 rungs: [0.25, 0.5, 0.75]   # prune bottom (1-keep_fraction) of live trials here
 keep_fraction: 0.5         # halve the population at each rung (ASHA-style)
-final_eval_examples: 40    # generate()-based field-accuracy on survivors only
+final_eval_examples: 100    # generate()-based field-accuracy on survivors only
 
 # Notes on H100 80-94GB budget:
 #   - frozen bf16 backbone:            ~8 GB  (loaded once, shared by all trials)

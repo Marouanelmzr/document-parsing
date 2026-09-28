@@ -13,7 +13,7 @@ comparison across models isn't confounded by prompt-wording changes.
 """
 from pathlib import Path
 
-from common import load_image
+from src.benchmark.common import load_image
 
 # vision_chat family (Qwen3-VL, Mistral-Small)
 TS_SCHEMA = """type Address = {
