@@ -43,12 +43,14 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import torch
+import random
+
 from peft import LoraConfig, get_peft_model, get_peft_model_state_dict
 from torch.optim import AdamW
 from transformers import get_cosine_schedule_with_warmup
 
 from src.training.lora_trials import TrialConfig
-from src.training.metrics import field_accuracy, safe_parse
+from src.benchmark.evaluate import evaluate as bench_evaluate
 
 
 
@@ -63,7 +65,27 @@ class TrainConfig:
     val_loss_batches: int = 20  # cheap proxy metric used for pruning
     final_eval_examples: int = 40  # expensive generate()-based metric, only for the survivors at the end
     ckpt_dir: Path = Path("checkpoints")
+    gen_max_new_tokens: int = 1600
 
+def _parse_lenient(text: str):
+    t = text.strip()
+    s, e = t.find("{"), t.rfind("}")
+    if s == -1 or e <= s:
+        return None
+    try:
+        obj = json.loads(t[s:e + 1])
+    except json.JSONDecodeError:
+        return None
+    return obj.get("fields", obj) if isinstance(obj, dict) else None
+
+
+def _safe_score(pred_fields, gold_fields) -> float:
+    # The benchmark scorer assumes well-formed structures. A malformed
+    # prediction (e.g. a list of strings) should score 0, not crash the run.
+    try:
+        return bench_evaluate({"fields": pred_fields or {}}, {"fields": gold_fields})["accuracy"]
+    except Exception:
+        return 0.0
 
 class MultiLoRATrainer:
     def __init__(self, base_model, processor, trials: List[TrialConfig],
@@ -149,30 +171,39 @@ class MultiLoRATrainer:
             losses.append(self.model(**batch).loss.item())
         return sum(losses) / max(1, len(losses))
 
+
     @torch.no_grad()
-    def _val_field_accuracy(self, name: str, n_examples: int) -> float:
-        self.model.set_adapter(name)
+    def _val_field_accuracy(self, name, n_examples, batch_size=4, log=print):
+        if name is not None:
+            self.model.set_adapter(name)
         self.model.eval()
-        accs = []
-        seen = 0
-        for batch in self.val_loader:
-            gpu_batch = {k: v.to(self.device) for k, v in batch.items()
-                         if k != "labels"}
-            gen = self.model.generate(**gpu_batch, max_new_tokens=1200, do_sample=False)
-            prompt_len = gpu_batch["input_ids"].shape[1]
-            for i in range(gen.shape[0]):
-                pred_text = self.processor.tokenizer.decode(
-                    gen[i, prompt_len:], skip_special_tokens=True)
-                gold_ids = batch["labels"][i]
-                gold_text = self.processor.tokenizer.decode(
-                    gold_ids[gold_ids != -100], skip_special_tokens=True)
-                accs.append(field_accuracy(safe_parse(pred_text), safe_parse(gold_text)))
-                seen += 1
-                if seen >= n_examples:
-                    break
-            if seen >= n_examples:
-                break
-        return sum(accs) / max(1, len(accs))
+        ds = self.val_loader.dataset
+        idxs = random.Random(0).sample(range(len(ds)), min(n_examples, len(ds)))  # fixed, unbiased
+        tok = self.processor.tokenizer
+        old_side, tok.padding_side = tok.padding_side, "left"
+        scores, floors, parse_fail = [], [], 0
+        try:
+            for s in range(0, len(idxs), batch_size):
+                chunk = idxs[s:s + batch_size]
+                texts, images, golds = zip(*(ds.prompt_and_gold(i) for i in chunk))
+                enc = self.processor(text=list(texts), images=list(images),
+                                     return_tensors="pt", padding=True).to(self.device)
+                gen = self.model.generate(**enc, max_new_tokens=self.cfg.gen_max_new_tokens,
+                                          do_sample=False, use_cache=True)
+                plen = enc["input_ids"].shape[1]
+                for j, gold in enumerate(golds):
+                    pred = _parse_lenient(tok.decode(gen[j, plen:], skip_special_tokens=True))
+                    parse_fail += pred is None
+                    scores.append(_safe_score(pred, gold))
+                    floors.append(_safe_score({}, gold))
+                    if s == 0 and j == 0:
+                        log(f"[eval-debug] raw output: {tok.decode(gen[j, plen:], skip_special_tokens=True)[:400]!r}")
+        finally:
+            tok.padding_side = old_side
+        n = max(1, len(scores))
+        log(f"[eval] {name}: acc={sum(scores)/n:.4f} empty-pred floor={sum(floors)/n:.4f} "
+            f"parse_fail={parse_fail}/{n}")
+        return sum(scores) / n
 
     def _maybe_prune(self, step: int, log):
         rung_steps = {int(r * self.cfg.total_steps) for r in self.cfg.rungs}
@@ -206,6 +237,9 @@ class MultiLoRATrainer:
         `grad_accum_steps` micro-batches per live adapter -- all adapters
         see the same sequence of micro-batches, so a comparison at any rung
         is apples-to-apples."""
+        with self.model.disable_adapter():
+            base_acc = self._val_field_accuracy(None, min(100, self.cfg.final_eval_examples), log=log)
+        log(f"[control] base model (no adapter) acc={base_acc:.4f}")
         train_iter = iter(self.train_loader)
         t0 = time.time()
         for step in range(1, self.cfg.total_steps + 1):

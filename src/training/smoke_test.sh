@@ -185,6 +185,7 @@ TRAIN_ARGS=(
     --mode "$MODE"
     --total-steps "$SMOKE_STEPS"
     --eval-every "$EVAL_EVERY"
+    --final-eval-examples 200
 )
 if [ "$MODE" = "single" ]; then
     TRAIN_ARGS+=(--trial "$TRIAL")

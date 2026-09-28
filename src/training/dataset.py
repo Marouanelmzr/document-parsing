@@ -21,7 +21,6 @@ padding"):
 from __future__ import annotations
 
 import json
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
@@ -32,8 +31,6 @@ from torch.utils.data import Dataset, Sampler
 
 # Reuse the repo's own prompt/schema so training data is byte-identical to
 # what the benchmark/inference path sends the model.
-_REPO_SRC = Path(__file__).resolve().parents[2] / "src" / "benchmark"
-sys.path.insert(0, str(_REPO_SRC))
 from src.benchmark.adapters import VISION_CHAT_PROMPT  # noqa: E402
 
 
@@ -106,6 +103,17 @@ class InvoiceVLDataset(Dataset):
             record = json.load(f)
         fields = record.get("fields", record)
         return json.dumps({"fields": fields}, ensure_ascii=False)
+
+    def prompt_and_gold(self, idx: int):
+        ex = self.examples[idx]
+        image = Image.open(ex.image_path).convert("RGB")
+        user_msg = [{"role": "user", "content": [
+            {"type": "image"}, {"type": "text", "text": VISION_CHAT_PROMPT}]}]
+        prompt_text = self.processor.apply_chat_template(
+            user_msg, tokenize=False, add_generation_prompt=True)
+        with open(ex.label_path, encoding="utf-8") as f:
+            record = json.load(f)
+        return prompt_text, image, record.get("fields", record)  # gold from file, not decoded labels
 
     def __getitem__(self, idx: int):
         ex = self.examples[idx]
