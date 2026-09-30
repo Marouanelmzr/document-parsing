@@ -66,6 +66,8 @@ class TrainConfig:
     final_eval_examples: int = 40  # expensive generate()-based metric, only for the survivors at the end
     ckpt_dir: Path = Path("checkpoints")
     gen_max_new_tokens: int = 1600
+    wandb_project: Optional[str] = None
+    wandb_run_name: Optional[str] = None
 
 def _parse_lenient(text: str):
     t = text.strip()
@@ -102,6 +104,8 @@ class MultiLoRATrainer:
 
         self.optimizers = {}
         self.schedulers = {}
+        self.adapter_params = {}
+        self._wb = None
         self._attach_adapters()
 
     # ---- setup -----------------------------------------------------
@@ -128,6 +132,7 @@ class MultiLoRATrainer:
             # never enter this adapter's autograd graph).
             params = [p for n, p in self.model.named_parameters()
                       if t.name in n and p.requires_grad]
+            self.adapter_params[t.name] = params
             self.optimizers[t.name] = AdamW(
                 params, lr=t.lr, weight_decay=t.weight_decay, fused=True)
             self.schedulers[t.name] = get_cosine_schedule_with_warmup(
@@ -149,9 +154,7 @@ class MultiLoRATrainer:
         return out.loss.item()
 
     def _flush_adapter(self, name: str):
-        torch.nn.utils.clip_grad_norm_(
-            [p for n, p in self.model.named_parameters() if name in n and p.requires_grad],
-            self.cfg.grad_clip)
+        torch.nn.utils.clip_grad_norm_(self.adapter_params[name], self.cfg.grad_clip)
         self.optimizers[name].step()
         self.schedulers[name].step()
         self.optimizers[name].zero_grad(set_to_none=True)
@@ -216,13 +219,43 @@ class MultiLoRATrainer:
         for name, vloss in scored:
             log(f"[rung step={step}] {name}: val_loss={vloss:.4f}"
                 f"{'  -> pruned' if name not in survivors else '  -> kept'}")
+            self._wlog({f"rung_val_loss/{name}": vloss}, step)
             if name not in survivors:
                 self.eliminated[name] = vloss
                 self.model.delete_adapter(name)
                 del self.optimizers[name]
                 del self.schedulers[name]
+                del self.adapter_params[name]
         self.live = [n for n in self.live if n in survivors]
 
+    def _init_wandb(self):
+        self._wb = None
+        if not self.cfg.wandb_project:
+            return
+        import wandb
+        config = json.loads(json.dumps({
+            "trials": {n: vars(t) for n, t in self.trials.items()},
+            "total_steps": self.cfg.total_steps,
+            "grad_accum_steps": self.cfg.grad_accum_steps,
+            "eval_every": self.cfg.eval_every,
+            "rungs": self.cfg.rungs,
+            "keep_fraction": self.cfg.keep_fraction,
+        }, default=str))
+        try:
+            self._wb = wandb.init(project=self.cfg.wandb_project,
+                                  name=self.cfg.wandb_run_name or None, config=config)
+        except Exception as e:
+            print(f"[warn] wandb init failed ({e}); continuing without wandb")
+            self._wb = None
+
+    def _wlog(self, data: dict, step: int):
+        if self._wb is not None:
+            self._wb.log(data, step=step)
+
+    def _wsummary(self, data: dict):
+        if self._wb is not None:
+            for k, v in data.items():
+                self._wb.summary[k] = v
     def _next_batch(self, train_iter):
         try:
             batch = next(train_iter)
@@ -232,25 +265,29 @@ class MultiLoRATrainer:
         return train_iter, {k: v.to(self.device) for k, v in batch.items()}
 
     def run(self, log=print) -> str:
-        """Runs the interleaved sweep; returns the name of the best trial.
-        Each of the `total_steps` optimizer steps consumes
-        `grad_accum_steps` micro-batches per live adapter -- all adapters
-        see the same sequence of micro-batches, so a comparison at any rung
-        is apples-to-apples."""
+        """Runs the interleaved sweep; returns the name of the best trial."""
+        self._init_wandb()
         with self.model.disable_adapter():
             base_acc = self._val_field_accuracy(None, min(100, self.cfg.final_eval_examples), log=log)
         log(f"[control] base model (no adapter) acc={base_acc:.4f}")
+        self._wsummary({"hf_eval/base_acc": base_acc})
+
         train_iter = iter(self.train_loader)
         t0 = time.time()
+        ga = self.cfg.grad_accum_steps
         for step in range(1, self.cfg.total_steps + 1):
-            last_losses = {}
-            for _ in range(self.cfg.grad_accum_steps):
+            sums = {name: 0.0 for name in self.live}
+            for _ in range(ga):
                 train_iter, batch = self._next_batch(train_iter)
                 for name in self.live:
-                    last_losses[name] = self._accumulate_adapter(name, batch)
+                    sums[name] += self._accumulate_adapter(name, batch)
             for name in self.live:
                 self._flush_adapter(name)
-            losses = last_losses
+            losses = {name: s / ga for name, s in sums.items()}
+
+            payload = {f"train_loss/{n}": l for n, l in losses.items()}
+            payload["n_live_trials"] = len(self.live)
+            self._wlog(payload, step)
 
             if step % self.cfg.eval_every == 0 or step == self.cfg.total_steps:
                 elapsed = time.time() - t0
@@ -261,14 +298,18 @@ class MultiLoRATrainer:
 
         log(f"[final] running field-accuracy eval on {len(self.live)} survivor(s): {self.live}")
         final_scores = {name: self._val_field_accuracy(name, self.cfg.final_eval_examples)
-                         for name in self.live}
+                        for name in self.live}
         for name, acc in sorted(final_scores.items(), key=lambda x: -x[1]):
             log(f"[final] {name}: field_accuracy={acc:.4f}")
         best = max(final_scores, key=final_scores.get)
         log(f"[final] best adapter: {best} (field_accuracy={final_scores[best]:.4f})")
+        self._wsummary({"hf_eval/best_trial": best,
+                        "hf_eval/best_acc": final_scores[best],
+                        "train_seconds": time.time() - t0})
         self._save_summary(final_scores, best)
+        if self._wb is not None:
+            self._wb.finish()
         return best
-
     # ---- saving ------------------------------------------------------
     def _save_summary(self, final_scores: dict, best: str):
         self.cfg.ckpt_dir.mkdir(parents=True, exist_ok=True)
@@ -282,37 +323,38 @@ class MultiLoRATrainer:
             json.dump(summary, f, indent=2, default=str)
 
     def save_best_adapter(self, best: str, out_dir: Path):
-        """Saves ONLY the winning adapter's weights (not the others, not the
-        frozen backbone). Safe to call after `run()`; also works if `best`
-        is the only trial left (no sweep, single-adapter mode)."""
+        """Saves ONLY the winning adapter, flat: out_dir/adapter_config.json
+        + adapter_model.safetensors (PEFT would otherwise nest it in out_dir/<best>/)."""
         out_dir = Path(out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         self.model.set_adapter(best)
         try:
-            # Newer peft: save only this adapter's subfolder directly.
             self.model.save_pretrained(out_dir, selected_adapters=[best])
         except TypeError:
-            # Older peft: build the state dict for this adapter manually.
             state_dict = get_peft_model_state_dict(self.model, adapter_name=best)
             (out_dir / best).mkdir(exist_ok=True)
             torch.save(state_dict, out_dir / best / "adapter_model.bin")
             self._lora_config(self.trials[best]).save_pretrained(out_dir / best)
+        sub = out_dir / best
+        if (sub / "adapter_config.json").exists():
+            for f in list(sub.iterdir()):
+                shutil.move(str(f), str(out_dir / f.name))
+            sub.rmdir()
         print(f"[info] saved winning adapter '{best}' -> {out_dir}")
 
     def merge_and_save(self, best: str, base_model_id: str, out_dir: Path):
-        """Optional: produce a merged full-precision checkpoint (base +
-        winning adapter) for serving with vLLM without a LoRA flag at all.
-        Loads a fresh base model copy so the merge doesn't disturb the live
-        multi-adapter model still in memory."""
+        """Merged bf16 checkpoint (base + winning adapter) for vLLM.
+        Merges on CPU from a fresh base copy, so the live GPU model is untouched."""
         from transformers import AutoModelForImageTextToText
         from peft import PeftModel
 
+        out_dir = Path(out_dir)
         tmp_adapter_dir = out_dir.parent / f"_tmp_{best}"
-        self.save_best_adapter(best, tmp_adapter_dir)
+        self.save_best_adapter(best, tmp_adapter_dir)   # flat layout
 
         fresh_base = AutoModelForImageTextToText.from_pretrained(
-            base_model_id, torch_dtype=torch.bfloat16)
-        merged = PeftModel.from_pretrained(fresh_base, tmp_adapter_dir, adapter_name=best)
+            base_model_id, dtype=torch.bfloat16)
+        merged = PeftModel.from_pretrained(fresh_base, str(tmp_adapter_dir))
         merged = merged.merge_and_unload()
         merged.save_pretrained(out_dir, safe_serialization=True)
         self.processor.save_pretrained(out_dir)

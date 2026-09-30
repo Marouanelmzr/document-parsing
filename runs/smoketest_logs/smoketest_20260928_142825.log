@@ -298,9 +298,15 @@ Preflight checks passed.
 [4/6] Running smoke test (50 steps, mode=plora)...
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 [transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:08<00:08,  8.93s/it]Fetching 2 files: 100%|██████████| 2/2 [00:09<00:00,  3.95s/it]Fetching 2 files: 100%|██████████| 2/2 [00:09<00:00,  4.70s/it]
+
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]
+Fetching 2 files:  50%|█████     | 1/2 [00:08<00:08,  8.93s/it]
+Fetching 2 files: 100%|██████████| 2/2 [00:09<00:00,  3.95s/it]
+Fetching 2 files: 100%|██████████| 2/2 [00:09<00:00,  4.70s/it]
 [warn] flash-attention-2 unavailable, falling back to sdpa
-Loading weights:   0%|          | 0/713 [00:00<?, ?it/s]Loading weights: 100%|██████████| 713/713 [00:00<00:00, 9479.75it/s]
+
+Loading weights:   0%|          | 0/713 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 713/713 [00:00<00:00, 9479.75it/s]
 [eval-debug] raw output: '```json\n{\n  "fields": {\n    "supplier_name": "Huff-Bryan",\n    "supplier_phone_number": null,\n    "supplier_address": {\n      "address": "2180 Michael Ridges Apt. 385",\n      "street_number": "2180",\n      "street_name": "Michael Ridges",\n      "po_box": null,\n      "address_complement": "Apt. 385",\n      "city": "Port Lindsey",\n      "postal_code": "MP 98258",\n      "state": null,\n      "country"'
 [eval] None: acc=0.8457 empty-pred floor=0.3267 parse_fail=0/100
 [control] base model (no adapter) acc=0.8457

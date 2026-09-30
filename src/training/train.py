@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import traceback
 
 import torch
 from torch.utils.data import DataLoader
@@ -109,6 +110,8 @@ def main():
     ap.add_argument("--final-eval-examples", type=int, default=40)
     ap.add_argument("--save-merged", action="store_true",
                      help="also save a merged (base+adapter) checkpoint for vLLM serving without --lora")
+    ap.add_argument("--wandb-project", default="")
+    ap.add_argument("--wandb-run-name", default="")
 
     args = ap.parse_args()
 
@@ -132,6 +135,9 @@ def main():
         grad_accum_steps=args.grad_accum_steps,
         final_eval_examples=args.final_eval_examples,
         ckpt_dir=args.output_dir,
+        wandb_project=args.wandb_project or None,
+        wandb_run_name=args.wandb_run_name or None,
+
     )
 
     trainer = MultiLoRATrainer(model, processor, trials, train_loader, val_loader, cfg)
@@ -139,7 +145,11 @@ def main():
     trainer.save_best_adapter(best, args.output_dir / "best_adapter")
 
     if args.save_merged:
-        trainer.merge_and_save(best, args.model_id, args.output_dir / "merged")
+        try:
+            trainer.merge_and_save(best, args.model_id, args.output_dir / "merged")
+        except Exception:
+            traceback.print_exc()
+            print("[error] merge failed -- best_adapter is saved, merge it manually later.")
 
 
 if __name__ == "__main__":
