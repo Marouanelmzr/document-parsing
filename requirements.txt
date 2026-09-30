@@ -23,3 +23,5 @@ datasets>=3.0.0
 
 # Optional but strongly recommended on H100 for attention throughput/memory.
 # If the build fails in your environment, train.py falls back to sdpa.
+
+wandb
