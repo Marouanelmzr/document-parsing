@@ -1,0 +1,65 @@
+_wandb:
+    value:
+        cli_version: 0.30.0
+        e:
+            qsrma1lntmqglp99xez9iohldvo80ihx:
+                args:
+                    - --model
+                    - /document-parsing/runs/plora_20260930_191339/merged
+                    - --tag
+                    - finetuned
+                    - --val-images
+                    - /document-parsing/data/invoices/processed/splits/val/images
+                    - --val-labels
+                    - /document-parsing/data/invoices/processed/splits/val/labels
+                    - --out-dir
+                    - /document-parsing/runs/plora_20260930_191339
+                    - --max-examples
+                    - "0"
+                    - --wandb-project
+                    - fatura-plora
+                email: elmozariahi.marouane@etu.uae.ac.ma
+                executable: /document-parsing/.venv/bin/python
+                git:
+                    commit: 7de587f86cffe3aa4ff37dbece59e0071417765a
+                    remote: https://github.com/Marouanelmzr/document-parsing.git
+                host: a14e93d372e8
+                os: Linux-6.8.0-124-generic-x86_64-with-glibc2.39
+                program: -m src.training.vllm_eval
+                python: CPython 3.12.3
+                root: /document-parsing
+                startedAt: "2026-09-30T21:31:23.367629Z"
+                writerId: qsrma1lntmqglp99xez9iohldvo80ihx
+        m: []
+        python_version: 3.12.3
+        t:
+            "1":
+                - 1
+                - 11
+                - 41
+                - 49
+                - 71
+                - 95
+                - 98
+                - 105
+            "2":
+                - 1
+                - 11
+                - 41
+                - 49
+                - 71
+                - 95
+                - 98
+                - 105
+            "3":
+                - 2
+                - 13
+                - 16
+                - 62
+            "4": 3.12.3
+            "5": 0.30.0
+            "6": 5.18.0
+            "12": 0.30.0
+            "13": linux-x86_64
+model:
+    value: /document-parsing/runs/plora_20260930_191339/merged

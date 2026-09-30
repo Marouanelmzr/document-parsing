@@ -1,0 +1,24 @@
+2026-09-30 21:35:21,555 INFO    MainThread:34930 [wandb_setup.py:_flush():81] Current SDK version is 0.30.0
+2026-09-30 21:35:21,555 INFO    MainThread:34930 [wandb_setup.py:_flush():81] Configure stats pid to 34930
+2026-09-30 21:35:21,556 INFO    MainThread:34930 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-09-30 21:35:21,556 INFO    MainThread:34930 [wandb_init.py:setup_run_log_directory():739] Logging user logs to /document-parsing/wandb/run-20260930_213521-0h6ekzyk/logs/debug.log
+2026-09-30 21:35:21,556 INFO    MainThread:34930 [wandb_init.py:setup_run_log_directory():740] Logging internal logs to /document-parsing/wandb/run-20260930_213521-0h6ekzyk/logs/debug-internal.log
+2026-09-30 21:35:21,556 INFO    MainThread:34930 [wandb_init.py:init():783] calling init triggers
+2026-09-30 21:35:21,556 INFO    MainThread:34930 [wandb_init.py:init():788] wandb.init called with sweep_config: {}
+config: {'model': 'Qwen/Qwen3-VL-4B-Instruct', '_wandb': {}}
+2026-09-30 21:35:21,556 INFO    MainThread:34930 [wandb_init.py:init():831] starting backend
+2026-09-30 21:35:21,556 INFO    MainThread:34930 [wandb_init.py:init():846] sending inform_init request
+2026-09-30 21:35:21,583 INFO    MainThread:34930 [wandb_init.py:init():851] backend started and connected
+2026-09-30 21:35:21,586 INFO    MainThread:34930 [wandb_init.py:init():921] updated telemetry
+2026-09-30 21:35:21,598 INFO    MainThread:34930 [wandb_init.py:init():944] communicating run to backend with 90.0 second timeout
+2026-09-30 21:35:22,023 INFO    MainThread:34930 [wandb_init.py:init():981] starting run threads in backend
+2026-09-30 21:35:22,244 INFO    MainThread:34930 [wandb_run.py:_console_start():2531] atexit reg
+2026-09-30 21:35:22,244 INFO    MainThread:34930 [wandb_run.py:_redirect():2381] redirect: wrap_raw
+2026-09-30 21:35:22,244 INFO    MainThread:34930 [wandb_run.py:_redirect():2450] Wrapping output streams.
+2026-09-30 21:35:22,244 INFO    MainThread:34930 [wandb_run.py:_redirect():2473] Redirects installed.
+2026-09-30 21:35:22,247 INFO    MainThread:34930 [wandb_init.py:init():1019] run started, returning control to user process
+2026-09-30 21:35:22,249 INFO    MainThread:34930 [wandb_run.py:_finish():2303] finishing run marouanemzr/fatura-plora/0h6ekzyk
+2026-09-30 21:35:22,249 INFO    MainThread:34930 [wandb_run.py:_atexit_cleanup():2498] got exitcode: 0
+2026-09-30 21:35:22,249 INFO    MainThread:34930 [wandb_run.py:_restore():2480] restore
+2026-09-30 21:35:22,249 INFO    MainThread:34930 [wandb_run.py:_restore():2486] restore done
+2026-09-30 21:35:23,149 INFO    MainThread:34930 [wandb_run.py:_footer_sync_info():3901] logging synced files

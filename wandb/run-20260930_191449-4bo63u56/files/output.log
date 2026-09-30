@@ -1,0 +1,29 @@
+[eval-debug] raw output: '```json\n{\n  "fields": {\n    "supplier_name": "Huff-Bryan",\n    "supplier_phone_number": null,\n    "supplier_address": {\n      "address": "2180 Michael Ridges Apt. 385",\n      "street_number": "2180",\n      "street_name": "Michael Ridges",\n      "po_box": null,\n      "address_complement": "Apt. 385",\n      "city": "Port Lindsey",\n      "postal_code": "MP 98258",\n      "state": null,\n      "country"'
+[eval] None: acc=0.8538 empty-pred floor=0.3391 parse_fail=0/20
+[control] base model (no adapter) acc=0.8538
+[transformers] `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+step 50/500 (1368s) train_loss: r16_lr2e-4=0.006 r16_lr1e-4=0.007 r32_lr2e-4=0.006 r32_lr1e-4=0.006 r64_lr1e-4=0.006
+step 100/500 (2719s) train_loss: r16_lr2e-4=0.004 r16_lr1e-4=0.004 r32_lr2e-4=0.004 r32_lr1e-4=0.004 r64_lr1e-4=0.004
+[rung step=125] r64_lr1e-4: val_loss=0.0041  -> kept
+[rung step=125] r32_lr1e-4: val_loss=0.0042  -> kept
+[rung step=125] r16_lr2e-4: val_loss=0.0044  -> kept
+[rung step=125] r16_lr1e-4: val_loss=0.0045  -> pruned
+[rung step=125] r32_lr2e-4: val_loss=0.0047  -> pruned
+step 150/500 (3860s) train_loss: r16_lr2e-4=0.005 r32_lr1e-4=0.006 r64_lr1e-4=0.005
+step 200/500 (4671s) train_loss: r16_lr2e-4=0.009 r32_lr1e-4=0.010 r64_lr1e-4=0.009
+step 250/500 (5476s) train_loss: r16_lr2e-4=0.005 r32_lr1e-4=0.005 r64_lr1e-4=0.005
+[rung step=250] r64_lr1e-4: val_loss=0.0032  -> kept
+[rung step=250] r16_lr2e-4: val_loss=0.0034  -> kept
+[rung step=250] r32_lr1e-4: val_loss=0.0036  -> pruned
+step 300/500 (6044s) train_loss: r16_lr2e-4=0.002 r64_lr1e-4=0.001
+step 350/500 (6578s) train_loss: r16_lr2e-4=0.008 r64_lr1e-4=0.007
+[rung step=375] r64_lr1e-4: val_loss=0.0032  -> kept
+[rung step=375] r16_lr2e-4: val_loss=0.0033  -> pruned
+step 400/500 (7000s) train_loss: r64_lr1e-4=0.005
+step 450/500 (7272s) train_loss: r64_lr1e-4=0.008
+step 500/500 (7543s) train_loss: r64_lr1e-4=0.002
+[final] running field-accuracy eval on 1 survivor(s): ['r64_lr1e-4']
+[eval-debug] raw output: '{"fields": {"supplier_name": "Huff-Bryan", "supplier_phone_number": null, "supplier_address": {"address": "2180 Michael Ridges", "street_number": "2180", "street_name": "Michael Ridges", "po_box": null, "address_complement": "Apt. 385", "city": "Port Lindsey", "postal_code": "98258", "state": "MP", "country": "US"}, "customer_name": "Michael Davis", "customer_phone_number": "+(717)455-3111", "cust'
+[eval] r64_lr1e-4: acc=0.9911 empty-pred floor=0.3391 parse_fail=0/20
+[final] r64_lr1e-4: field_accuracy=0.9911
+[final] best adapter: r64_lr1e-4 (field_accuracy=0.9911)
